@@ -1,5 +1,5 @@
 package shs;
 
-public class Doctor {
+public class Doctor extends Person {
 
 }
