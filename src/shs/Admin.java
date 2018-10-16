@@ -3,11 +3,11 @@ package shs;
 public class Admin 
 {
 	
-	Credentials login;
+	Credentials loginCredentials;
 	public Admin() {
 		// TODO Auto-generated constructor stub
-		login.setId("ADMIN@123");
-		login.setPassword("admin@123");
+		this.loginCredentials.setId("ADMIN@123");
+		this.loginCredentials.setPassword("admin@123");
 	}
 	
 	void getDoctorDetails()
