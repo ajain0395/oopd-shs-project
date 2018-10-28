@@ -2,6 +2,7 @@ package shs;
 
 public class OPD implements Location{
 
+
 	public Doctor getAssignedDoctor() {
 		return assignedDoctor;
 	}
