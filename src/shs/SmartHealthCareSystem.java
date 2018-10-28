@@ -2,10 +2,9 @@ package shs;
 
 import java.util.ArrayList;
 
-public class SmartHealthCareSystem {
+public class SmartHealthCareSystem implements Billing {
 	
 	ArrayList<Patient> patientList = new ArrayList<>();
-	ArrayList<Staff> staffList = new ArrayList<>();
 	ArrayList<Doctor> doctorList = new ArrayList<>();
 	ArrayList<Ward> wardList = new ArrayList<>();
 	Admin adminInstance = new Admin();
@@ -27,7 +26,7 @@ public class SmartHealthCareSystem {
 	{
 		
 	}
-	void generateBill(Patient p)
+	public void generateBill(Patient p)
 	{
 		
 	}
