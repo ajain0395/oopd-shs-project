@@ -3,6 +3,7 @@ package shs;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class Doctor extends Person {
@@ -120,14 +121,14 @@ public class Doctor extends Person {
 		System.out.println("Date of Birth -> " + getDob());
 		System.out.println("Gender -> " + getGender());
 		System.out.println("Address -> " + getAddress());
-		System.out.println("Contact Number -> " + getPassword());
+		System.out.println("Contact Number -> " + getPhoneNumber());
 		System.out.println("Department -> " + getDeptId());
 		System.out.println("Rank -> " + getRank());
 		System.out.println("Surgeon - > " + getSurgeon());
 		System.out.println("Opd Fees -> " + getOpdFees());
 	}
 	
-	public void loginSucess()
+	public void loginSuccess()
 	{
 		boolean flag = true;
 		while(flag)
@@ -179,6 +180,12 @@ public class Doctor extends Person {
 	                while(rs.next())
 	                {
 	                	System.out.println("Schedule id is" + rs.getInt("ScheduleId"));
+	                	System.out.println("Doctor id is" + rs.getInt("Did"));
+	                	System.out.println("Date is" + rs.getDate("Date"));
+	                	System.out.println("Start time is" + rs.getTime("StartTime"));
+	                	System.out.println("End time is" + rs.getTime("EndTime"));
+	                	System.out.println("Count of patient is" + rs.getInt("Count_Of_Patients"));
+	                	//Time tm = new Time(deptId, deptId, deptId);
 	                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
 	                }
 	    
@@ -280,60 +287,73 @@ public class Doctor extends Person {
 
 	private void changeOpdFees() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current OPD is -> " + getOpdFees());
+		System.out.println("Enter new Opd fees ");
 	}
 
 
 	private void changeSurgeon() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current surgeon status is -> " + getSurgeon());
+		System.out.println("Enter new surgeon status ");
 	}
 
 
 	private void changeRank() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current Rank is -> " + getRank());
+		System.out.println("Enter new rank ");
 	}
 
 
 	private void changeDepartment() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current Department is -> " + getDeptId());
+		System.out.println("Enter new department ");
 	}
 
 
 	private void changePassword() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current password is -> " + getPassword());
+		System.out.println("Enter new password ");
 	}
 
 
 	private void changeContactNumber() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current contact number is -> " + getPhoneNumber());
+		System.out.println("Enter new contact number ");
 	}
 
 
 	private void changeAddress() {
 		// TODO Auto-generated method stub
-		
+		System.out.println("current Address is -> " + getAddress());
+		System.out.println("Enter new Address ");
 	}
 
 
 	private void changeGender() {
 		// TODO Auto-generated method stub
-		
+
+		System.out.println("current Gender is -> " + getGender());
+		System.out.println("Enter new Gender ");
 	}
 
 
 	private void changeDOB() {
 		// TODO Auto-generated method stub
-		
+
+		System.out.println("current DOB is -> " + getDob());
+		System.out.println("Enter new DOB");
 	}
 
 
 	private void changeName() {
 		// TODO Auto-generated method stub
+		System.out.println("current name is -> " + getName());
+		System.out.println("Enter new name ");
 		
 	}
 

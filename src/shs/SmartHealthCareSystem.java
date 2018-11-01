@@ -95,11 +95,11 @@ public class SmartHealthCareSystem implements Billing {
 					patient.loginSuccess();
 				}
 			} else if (choice == 3) {
-		//		doctor = Doctor.getDoctorById(1, "123");
+				doctor = Doctor.getDoctorById(1, "123");
 				if (doctor == null) {
 					System.out.println("Record Not Found");
 				} else {
-				//	doctor.loginSuccess();
+					doctor.loginSuccess();
 				}
 			}
 			else if(choice == 4)
