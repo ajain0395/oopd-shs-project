@@ -6,10 +6,21 @@ public class Person {
 	
 	String name;
 	Date dob;
-	int age;
 	String gender;
 	private String address;
 	private String phoneNumber;
+	
+	
+	public Person() {
+		// TODO Auto-generated constructor stub
+	}
+	public Person(String name, Date dob,String gender, String address, String phonenumber) {
+		// TODO Auto-generated constructor stub
+		this.setAddress(address);
+		this.setDob(dob);
+		this.setName(name);
+		this.setPhoneNumber(phonenumber);
+	}
 
 	public String getName() {
 		return name;
@@ -23,12 +34,6 @@ public class Person {
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
 	public String getAddress() {
 		return address;
 	}
@@ -41,6 +46,4 @@ public class Person {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
-	
 }
