@@ -18,10 +18,17 @@ public class Person {
 		// TODO Auto-generated constructor stub
 		this.setAddress(address);
 		this.setDob(dob);
+		this.setGender(gender);
 		this.setName(name);
 		this.setPhoneNumber(phonenumber);
 	}
 
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 	public String getName() {
 		return name;
 	}
