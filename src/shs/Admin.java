@@ -19,7 +19,7 @@ public class Admin
 		try{
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT Name FROM Doctor;");
+		ResultSet rs = stmt.executeQuery("SELECT Name FROM Doctor");
 		while (rs.next()) {
 			  String DName = rs.getString("Name");
 			  System.out.println(i+". "+DName + "\n");
@@ -27,7 +27,7 @@ public class Admin
 			}
 		System.out.println("Enter Doctor ID for more details: ");
 		int did=sc.nextInt();
-		ResultSet detail = stmt.executeQuery("SELECT * FROM Doctor");
+		ResultSet detail = stmt.executeQuery("SELECT * FROM Doctor where Did=1");
         while (detail.next()) {
            int id = detail.getInt("Did");
            String name = detail.getString("Name");
@@ -60,11 +60,58 @@ public class Admin
 	}
 	void getPatientDetails()
 	{
-
+		int i=1;
+		try{
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT Name FROM patient");
+			while (rs.next()) {
+				  String pName = rs.getString("Name");
+				  System.out.println(i+". "+pName + "\n");
+				  i++;
+				}
+			System.out.println("Enter your choice: ");
+			System.out.println("1.View patient personal details\n2.View patient history\n3.");
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 	}
 	void registerDoctor()
 	{
-		
+		System.out.println("Enter the following registration details: ");
+		System.out.println("Doctor Id: ");
+		String id=sc.nextLine();
+		System.out.println("Name");
+		String name=sc.nextLine();
+		System.out.println("DOB");
+		String dob=sc.nextLine();
+		System.out.println("Gender: ");
+		String gen=sc.nextLine();
+        System.out.println("Address: ");
+        String add=sc.nextLine();
+        System.out.println("Contact No: ");
+        String cno=sc.nextLine();
+        System.out.println("Password: ");
+        int pass=sc.nextInt();
+        System.out.println("Department ID: ");
+        String depid=sc.nextLine();
+        System.out.println("Rank: ");
+        String rank=sc.nextLine();
+        System.out.println("Surgeon: ");
+        String sur=sc.nextLine();
+        System.out.println("OPD Fees: ");
+        String fee=sc.nextLine();
+        try{
+    		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
+    		Statement stmt = con.createStatement();
+    		ResultSet rs = stmt.executeQuery("Insert into Doctor values("+id+", "+name+", "+dob+", "+gen+", "+add+", "+cno+", "+pass+", "+depid+", "+rank+", "+sur+", "+fee+")");
+    		System.out.println("Doctor has been successfully registered.");
+        }
+        catch(Exception e){
+        	System.out.println(e);
+        }
+
 	}
 	void reassignDoctor()
 	{
@@ -72,6 +119,24 @@ public class Admin
 	}
 	void changeCredentials()
 	{
+		System.out.println("Verify credentials to continue further: ");
+		System.out.println("Username: ");
+		String uname=sc.nextLine();
+		System.out.println("Password: ");
+		String pass=sc.nextLine();
+		if(uname=="ADMIN@123" && pass=="admin@123"){
+			System.out.println("Enter new Username:");
+			String u=sc.nextLine();
+			System.out.println("Enter new Password:");
+			String p=sc.nextLine();
+			this.loginCredentials.setId(u);
+			this.loginCredentials.setPassword(p);
+			System.out.println("Credentials successfully updated!");
+			
+		}
+		else{
+			System.out.println("Invalid username or password!");
+		}
 		
 	}
 	void showAdminOptions()
