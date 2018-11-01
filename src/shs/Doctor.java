@@ -4,106 +4,85 @@ import java.util.ArrayList;
 
 public class Doctor extends Person {
 
-	Credentials loginCredentials;
-	//public String id = "DOC";
-	String designation;
-	int rank; // if set 1 then HOD 2 then senior 3 then junior
-	Department department;
-	String schedule;
-	int consultationFees;
-	ArrayList<Patient> patientList = new ArrayList<>();
-	int salary;
-	Doctor reference;//doctor that can be referred
 
-	
-	
-	public String getDesignation() {
-		return designation;
+	int docId;
+	String password;
+	int deptId;
+	String rank;
+	String surgeon;
+	int opdFees;
+
+
+	public int getDocId() {
+		return docId;
 	}
 
 
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
+	public void setDocId(int docId) {
+		this.docId = docId;
 	}
 
 
+	public String getPassword() {
+		return password;
+	}
 
-	public int getRank() {
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public int getDeptId() {
+		return deptId;
+	}
+
+
+	public void setDeptId(int deptId) {
+		this.deptId = deptId;
+	}
+
+
+	public String getRank() {
 		return rank;
 	}
 
 
-
-	public void setRank(int rank) {
+	public void setRank(String rank) {
 		this.rank = rank;
 	}
 
 
-
-	public Department getDepartment() {
-		return department;
+	public String getSurgeon() {
+		return surgeon;
 	}
 
 
-
-	public void setDepartment(Department department) {
-		this.department = department;
+	public void setSurgeon(String surgeon) {
+		this.surgeon = surgeon;
 	}
 
 
-
-	public String getSchedule() {
-		return schedule;
+	public int getOpdFees() {
+		return opdFees;
 	}
 
 
-
-	public void setSchedule(String schedule) {
-		this.schedule = schedule;
+	public void setOpdFees(int opdFees) {
+		this.opdFees = opdFees;
 	}
 
 
-
-	public int getConsultationFees() {
-		return consultationFees;
-	}
-
-
-
-	public void setConsultationFees(int consultationFees) {
-		this.consultationFees = consultationFees;
-	}
-
-
-
-	public int getSalary() {
-		return salary;
-	}
-
-
-
-	public void setSalary(int salary) {
-		this.salary = salary;
-	}
-
-
-
-	public Doctor getReference() {
-		return reference;
-	}
-
-
-
-	public void setReference(Doctor reference) {
-		this.reference = reference;
-	}
-
-
-
-	public Doctor() {
+	public Doctor(int docId , String name , String date , String gender , String address , String contactNumber , String password , int deptId , String rank , String Surgeon , int opdFees) {
 		// TODO Auto-generated constructor stub
-		this.loginCredentials.setId("DOC");
+		this.super(name , date , gender , address , contactNumber);
+		setDocId(docId);
+		setPassword(password);
+		setDeptId(deptId);
+		setRank(rank);
+		setSurgeon(Surgeon);
+		setOpdFees(opdFees);
+		
 	}
 	
 }
