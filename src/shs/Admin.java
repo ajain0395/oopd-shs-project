@@ -2,8 +2,9 @@ package shs;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
-public class Admin 
+public class Admin extends Person 
 {
 	Scanner sc=new Scanner(System.in);
 	Credentials loginCredentials;
@@ -15,6 +16,7 @@ public class Admin
 	
 	void getDoctorDetails()
 	{
+		Date dob = new Date();
 		int i=1;
 		try{
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
@@ -27,11 +29,11 @@ public class Admin
 			}
 		System.out.println("Enter Doctor ID for more details: ");
 		int did=sc.nextInt();
-		ResultSet detail = stmt.executeQuery("SELECT * FROM Doctor where Did=1");
+		ResultSet detail = stmt.executeQuery("SELECT * FROM Doctor where Did="+did);
         while (detail.next()) {
            int id = detail.getInt("Did");
            String name = detail.getString("Name");
-           String dob = detail.getString("DOB");
+           dob = detail.getDate("DOB");
            String gen = detail.getString("Gender");
            String add = detail.getString("Address");
            String cno = detail.getString("ContactNo");
@@ -72,6 +74,13 @@ public class Admin
 				}
 			System.out.println("Enter your choice: ");
 			System.out.println("1.View patient personal details\n2.View patient history\n3.");
+			int c=sc.nextInt();
+			if(c==1){
+				showPatientDetails();
+			}
+			else if(c==2){
+				
+			}
 		}
 		catch(Exception e){
 			System.out.println(e);
@@ -141,20 +150,53 @@ public class Admin
 	}
 	void showAdminOptions()
 	{
+		int c=6;
 		System.out.println("Select an option: ");
-		System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials");
-		int c=sc.nextInt();
-		if(c==1)
-			getDoctorDetails();
-		else if(c==2)
-			getPatientDetails();
-		else if(c==3)
-			registerDoctor();
-		else if(c==4)
-			reassignDoctor();
-		else if(c==5)
-			changeCredentials();
-		else
-			System.out.println("You entered wrong choice!");
+		while(c!=0){
+			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n0.Log-out");
+			c=sc.nextInt();
+			if(c==1)
+				getDoctorDetails();
+			else if(c==2)
+				getPatientDetails();
+			else if(c==3)
+				registerDoctor();
+			else if(c==4)
+				reassignDoctor();
+			else if(c==5)
+				changeCredentials();
+			else
+				System.out.println("You entered wrong choice!");
+		}
+	}
+	void showPatientDetails()
+	{
+		Date dob = new Date();
+		System.out.println("Enter patient ID whose details you want to view: ");
+		int i=sc.nextInt();
+		try{
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
+			Statement stmt = con.createStatement();
+			ResultSet detail = stmt.executeQuery("SELECT * FROM patient where Pid="+i);
+			while (detail.next()) {
+		           int id = detail.getInt("Pid");
+		           String name = detail.getString("Name");
+		           dob=detail.getDate("DOB");
+		           String gen = detail.getString("Gender");
+		           String add = detail.getString("Address");
+		           String cno = detail.getString("ContactNo");
+		           String pass = detail.getString("Password");
+		           System.out.println("ID: "+id);
+		           System.out.println("Name: "+name);
+		           System.out.println("DOB: "+dob);
+		           System.out.println("Gender: "+gen);
+		           System.out.println("Address: "+add);
+		           System.out.println("Contact No: "+cno);
+		           System.out.println("Password: "+pass);
+		        }
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 	}
 }
