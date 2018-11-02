@@ -155,6 +155,10 @@ public class Doctor extends Person {
 			{
 				getDoctorSchedule();
 			}
+			else if(choice == 4)
+			{
+				addSchedule();
+			}
 			else if(choice == 7) 
 			{
 				flag = false;
@@ -164,6 +168,12 @@ public class Doctor extends Person {
 				System.out.println("Wrong choice");
 			}
 		}
+		
+	}
+
+
+	private void addSchedule() {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -292,11 +302,11 @@ public class Doctor extends Person {
 	private void updateDoctorChanges() {
 		// TODO Auto-generated method stub
 	
-			try {
+			/*try {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
 			//	boolean status = statement.execute("select * from record where pid = "+ pid);
 				
-				/*String query = "update table patient set"
+				String query = "update table patient set"
 						+" name=" + instance.getName()
 						+ " dob=" + instance.getDob()
 						+ " gender=" +instance.getGender()
@@ -305,7 +315,7 @@ public class Doctor extends Person {
 						+ " password=" + instance.getPassword()
 						//+"salary"=2000 
 						+" where pid="+ instance.getPid();
-	            //count will give you how many records got updated*/
+	            //count will give you how many records got updated
 				String query = "update doctor set"
 				+" name=" + getName()
 				//+ ", dob=" + getDob()
@@ -333,7 +343,7 @@ public class Doctor extends Person {
 	            catch (Exception e) {
 	            	
 	            	System.out.println("Exception " + e.getMessage().toString());
-	}
+	}*/
 		
 	}
 
@@ -383,63 +393,7 @@ public class Doctor extends Person {
 	}
 
 
-	private void changeContactNumber() {
-		// TODO Auto-generated method stub
-		System.out.println("current contact number is -> " + getPhoneNumber());
-		System.out.println("Enter new contact number ");
-		String newPhoneNumber = SmartHealthCareSystem.sc.nextLine();
-		setPhoneNumber(newPhoneNumber);
-	}
-
-
-	private void changeAddress() {
-		// TODO Auto-generated method stub
-		System.out.println("current Address is -> " + getAddress());
-		System.out.println("Enter new Address ");
-		String newAddress = SmartHealthCareSystem.sc.nextLine();
-		setAddress(newAddress);
-	}
-
-
-	private void changeGender() {
-		// TODO Auto-generated method stub
-
-		System.out.println("current Gender is -> " + getGender());
-		System.out.println("Enter new Gender ");
-		String newGender = SmartHealthCareSystem.sc.nextLine();
-		setGender(newGender);
-	}
-
-
-	private void changeDOB() {
-		// TODO Auto-generated method stub
-
-		System.out.println("current DOB is -> " + getDob());
-		//System.out.println("Enter new DOB ");
-		while(true)
-		{
-		System.out.print("Enter new Date of Birth(YYYY-MM-DD): ");
-		try {
-
-		setDob(SmartHealthCareSystem.simpleDateFormat.parse(SmartHealthCareSystem.sc.nextLine()));
-		break;
-
-		} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		System.out.println("Invalid Date Format");
-		}
-		}
-	}
-
-
-	private void changeName() {
-		// TODO Auto-generated method stub
-		System.out.println("current name is -> " + getName());
-		System.out.println("Enter new name ");
-		String newName = SmartHealthCareSystem.sc.nextLine();
-		setName(newName);
-		
-	}
+	
 
 
 	public Doctor(int docId , String name , Date date , String gender , String address , String contactNumber , String password , int deptId , String rank , String Surgeon , int opdFees) {
