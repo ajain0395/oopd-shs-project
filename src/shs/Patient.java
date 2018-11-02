@@ -1,7 +1,9 @@
 package shs;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.Date;
 
 public class Patient extends Person {
@@ -78,32 +80,32 @@ public class Patient extends Person {
 	            int choice = SmartHealthCareSystem.nextint();
 	            if(choice == 1)
 	            {
-	   //             changeName();
+	                changeName();
 	                
 	            }
 	            else if(choice ==2)
 	            {
-	     //           changeDOB();
+	                changeDOB();
 	            }
 	            else if(choice == 3)
 	            {
 
-//	                changeGender();
+	                changeGender();
 	            }
 	            else if(choice ==4 )
 	            {
 
-	///                changeAddress();
+	                changeAddress();
 	            }
 	            else if(choice ==5)
 	            {
 
-	   ///             changeContactNumber();
+	                changeContactNumber();
 	            }
 	            else if(choice ==6 )
 	            {
 
-	      //          changePassword();
+	                changePassword();
 	            }
 	            else if(choice ==7 )
 	            {
@@ -120,6 +122,142 @@ public class Patient extends Person {
 	void bookAppointment()
 	{
 		
+	}
+	
+	void updatePatient(/*Patient instance*/)
+	{
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+		//	boolean status = statement.execute("select * from record where pid = "+ pid);
+			
+			/*String query = "update table patient set"
+					+" name=" + instance.getName()
+					+ " dob=" + instance.getDob()
+					+ " gender=" +instance.getGender()
+					+ " address=" + instance.getAddress()
+					+ " contactno=" + instance.getPhoneNumber()
+					+ " password=" + instance.getPassword()
+					//+"salary"=2000 
+					+" where pid="+ instance.getPid();
+            //count will give you how many records got updated*/
+			String query = "update table patient set"
+			+" name=" + getName()
+			+ " dob=" + getDob()
+			+ " gender=" +getGender()
+			+ " address=" + getAddress()
+			+ " contactno=" + getPhoneNumber()
+			+ " password=" + getPassword()
+			//+"salary"=2000 
+			+" where pid="+ getPid();
+    //count will give you how many records got updated
+            int count = statement.executeUpdate(query);
+			
+           // System.out.println("Hello " + status);
+			if(count == 1){
+                System.out.println("Record Updated");
+            }
+            else
+            {
+            	System.out.println("Record not updated try again");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}		
+	}
+	void setProfile()
+	{
+		System.out.print("Enter Name: ");
+		setName(SmartHealthCareSystem.sc.nextLine());
+		System.out.print("Enter Gender(M/F): ");
+		setGender(SmartHealthCareSystem.sc.nextLine());
+		while(true)
+		{
+		System.out.print("Enter Date of Birth(YYYY-MM-DD): ");
+		try {
+			
+			setDob(SmartHealthCareSystem.simpleDateFormat.parse(SmartHealthCareSystem.sc.nextLine()));
+			break;
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+		System.out.println("Invalid Date Format");
+		}
+		}
+		
+		while(true) {
+			System.out.print("Enter Phone Number: ");
+			setPhoneNumber(SmartHealthCareSystem.nextintString());
+			if(getPhoneNumber().length() == 10)
+			{
+				break;
+			}
+			else
+			{
+				System.out.println("Invalid Phone Number length");
+			}
+			}
+		System.out.print("Enter Address: ");
+		setAddress(SmartHealthCareSystem.sc.nextLine());
+		while(true) {
+		System.out.print("Enter Password: ");
+		setPassword(SmartHealthCareSystem.sc.nextLine());
+		if(getPassword().length() >= 8)
+		{
+			break;
+		}
+		else
+		{
+			System.out.println("Password length must be atleast of 8 character ");
+		}
+		}
+	}
+	
+	void registerPatient()
+	{
+		setProfile();
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+		//	boolean status = statement.execute("select * from record where pid = "+ pid);
+			
+			//INSERT INTO `patient`(`Pid`, `Name`, `DOB`, `Gender`, `Address`, `ContactNo`, `Password`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7])
+			
+			/*String query = "update table patient set"
+					+" name=" + getName()
+					+ " dob=" + getDob()
+					+ " gender=" +getGender()
+					+ " address=" + getAddress()
+					+ " contactno=" + getPhoneNumber()
+					+ " password=" + getPassword()
+					//+"salary"=2000 
+					+" where pid="+ getPid();*/
+			String query = "INSERT INTO patient( Name, DOB, Gender, Address, ContactNo , Password ) VALUES "
+					+ "(?,?,?,?,?,?)";
+			PreparedStatement pstmt = null;
+            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, getName());
+            pstmt.setString(3, getGender());
+            pstmt.setDate(2, java.sql.Date.valueOf(SmartHealthCareSystem.simpleDateFormat.format(getDob())));
+            pstmt.setString(4, getAddress());
+            pstmt.setString(5, getPhoneNumber());
+            pstmt.setString(6, getPassword());
+            pstmt.executeUpdate();
+	           ResultSet rs = pstmt.getGeneratedKeys();
+	            if(rs != null && rs.next()){
+	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
+	                setPid(rs.getInt(1));
+	                System.out.println("Registration Successful you id is: " + getPid());
+	            }
+            else
+            {
+            	System.out.println("Registration Failed");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}		
 	}
 	void seeRecords()
 	{
@@ -203,6 +341,10 @@ public class Patient extends Person {
 	//	SmartHealthCareSystem.sc
 	}
 
+	public Patient() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public int getPid() {
 		return pid;
 	}
