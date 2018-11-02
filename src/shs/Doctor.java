@@ -1,11 +1,15 @@
 package shs;
 
-import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+
+
 
 public class Doctor extends Person {
 
@@ -79,6 +83,7 @@ public class Doctor extends Person {
 	
 	public static Doctor getDoctorById(int docId,String password)
 	{
+		//Date date;
 		Doctor instance = null;
      //   System.out.println("Hello ");
 		try {
@@ -174,7 +179,82 @@ public class Doctor extends Person {
 
 	private void addSchedule() {
 		// TODO Auto-generated method stub
+		java.sql.Date appointDate;
+		while(true)
+		{
+			System.out.print("Enter new Appointment Date(YYYY-MM-DD): ");
+			appointDate = java.sql.Date.valueOf(SmartHealthCareSystem.sc.nextLine());
+			break;
+		}
+		System.out.println("Enter start time");
+		Time startTime = getTime();
+		System.out.println("Enter end time");
+		Time endTime = getTime();
+		System.out.println("Enter number of patients you want to accomodate");
+		int countPatinets = SmartHealthCareSystem.nextint();
 		
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+		
+			String query = "INSERT INTO schedule( Did, Date, StartTime, EndTime, Count_Of_Patients ) VALUES "
+					+ "(?,?,?,?,?)";
+			PreparedStatement pstmt = null;
+            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, getDocId());
+            pstmt.setTime(3, startTime);
+            pstmt.setDate(2, appointDate);
+            pstmt.setTime(4, endTime);
+            pstmt.setInt(5, countPatinets);
+            //pstmt.setString(6, getPassword());
+            pstmt.executeUpdate();
+	           ResultSet rs = pstmt.getGeneratedKeys();
+	            if(rs != null && rs.next()){
+	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
+	                //setPid(rs.getInt(1));
+	                System.out.println("New Appointment schedule added ");
+	            }
+            else
+            {
+            	System.out.println("Registration Failed");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+		
+		
+		
+	}
+
+
+	private Time getTime() {
+		// TODO Auto-generated method stub
+		Time sampleTime;
+		while(true)
+		{
+		
+			
+			System.out.println("enter hours in 24 hr format");
+			int hour = SmartHealthCareSystem.nextint();
+			if(hour>23 || hour<0)
+			{
+				System.out.println("not in 24 hr format");
+				continue;
+			}
+			System.out.println("Enter minutes ");
+			int minute = SmartHealthCareSystem.nextint();
+			if(minute>59 || minute<0)
+			{
+				System.out.println("minute should be between 0 and 59");
+				continue;
+			}
+			
+			sampleTime = new Time(hour, minute, 0);
+			break;
+			
+		}
+		return sampleTime;
 	}
 
 
