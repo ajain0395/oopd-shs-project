@@ -62,6 +62,22 @@ public class Patient extends Person {
 		System.out.println("Address: " + getAddress());
 		System.out.println("Phone Number: "+ getPhoneNumber());
 	}
+	
+	void changePassword()
+	{
+		while(true) {
+			System.out.print("Enter Password: ");
+			setPassword(SmartHealthCareSystem.sc.nextLine());
+			if(getPassword().length() >= 8)
+			{
+				break;
+			}
+			else
+			{
+				System.out.println("Password length must be atleast of 8 character ");
+			}
+			}
+	}
 	void updateProfile()
 	{
 		 boolean flag2 = true;
@@ -104,11 +120,11 @@ public class Patient extends Person {
 	            }
 	            else if(choice ==6 )
 	            {
-
 	                changePassword();
 	            }
 	            else if(choice ==7 )
 	            {
+	            	updatePatient();
 	                flag2 = false;
 	            }
 	            else
@@ -140,14 +156,14 @@ public class Patient extends Person {
 					//+"salary"=2000 
 					+" where pid="+ instance.getPid();
             //count will give you how many records got updated*/
-			String query = "update table patient set"
-			+" name=" + getName()
-			+ " dob=" + getDob()
-			+ " gender=" +getGender()
-			+ " address=" + getAddress()
-			+ " contactno=" + getPhoneNumber()
-			+ " password=" + getPassword()
-			//+"salary"=2000 
+			String query = "update patient set"
+			+" name='" + getName()+"'"
+			+ ", dob='" + getDob()+"'"
+			+ ", gender='" +getGender()+"'"
+			+ ", address='" + getAddress()+"'"
+			+ ", contactno='" + getPhoneNumber()+"'"
+			+ ", password='" + getPassword()+"'"
+			//+"salary"=2000
 			+" where pid="+ getPid();
     //count will give you how many records got updated
             int count = statement.executeUpdate(query);
@@ -218,20 +234,7 @@ public class Patient extends Person {
 	{
 		setProfile();
 		try {
-			Statement statement = SmartHealthCareSystem.con.createStatement();
-		//	boolean status = statement.execute("select * from record where pid = "+ pid);
-			
-			//INSERT INTO `patient`(`Pid`, `Name`, `DOB`, `Gender`, `Address`, `ContactNo`, `Password`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7])
-			
-			/*String query = "update table patient set"
-					+" name=" + getName()
-					+ " dob=" + getDob()
-					+ " gender=" +getGender()
-					+ " address=" + getAddress()
-					+ " contactno=" + getPhoneNumber()
-					+ " password=" + getPassword()
-					//+"salary"=2000 
-					+" where pid="+ getPid();*/
+	//		Statement statement = SmartHealthCareSystem.con.createStatement();
 			String query = "INSERT INTO patient( Name, DOB, Gender, Address, ContactNo , Password ) VALUES "
 					+ "(?,?,?,?,?,?)";
 			PreparedStatement pstmt = null;
@@ -242,7 +245,9 @@ public class Patient extends Person {
             pstmt.setString(4, getAddress());
             pstmt.setString(5, getPhoneNumber());
             pstmt.setString(6, getPassword());
+            
             pstmt.executeUpdate();
+            
 	           ResultSet rs = pstmt.getGeneratedKeys();
 	            if(rs != null && rs.next()){
 	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
@@ -296,6 +301,10 @@ public class Patient extends Person {
 	{
 		
 	}
+	void cancelAppointment()
+	{
+		
+	}
 	void loginSuccess()
 	{
 		System.out.println("Hello " + getName());
@@ -305,8 +314,9 @@ public class Patient extends Person {
 			System.out.println("1. See Profile");
 			System.out.println("2. Update Profile");
 			System.out.println("3. Book Appointment");
-			System.out.println("4. See Records History");
-			System.out.println("5. Logout");
+			System.out.println("4. Delete Appointment");
+			System.out.println("5. See Records History");
+			System.out.println("6. Logout");
 			System.out.print("Enter Your Choice : ");
 			int choice = SmartHealthCareSystem.nextint();
 			if(choice == 1)
@@ -323,9 +333,13 @@ public class Patient extends Person {
 			}
 			else if(choice == 4)
 			{
-				seeRecords();
+				cancelAppointment();
 			}
 			else if(choice == 5)
+			{
+				seeRecords();
+			}
+			else if(choice == 6)
 			{
 				flag = false;
 			}
