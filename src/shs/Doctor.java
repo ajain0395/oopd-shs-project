@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Time;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Doctor extends Person {
@@ -133,10 +134,12 @@ public class Doctor extends Person {
 		boolean flag = true;
 		while(flag)
 		{
-			System.out.println("Welcome Doctor " + getName());
+			System.out.println("\n\nWelcome Doctor " + getName());
 			System.out.println("1. View Profile");
 			System.out.println("2. Update Profile");
 			System.out.println("3. View Doctor Schedule");
+			System.out.println("4. Add Appointment Schedule");
+			System.out.println("5. ");
 			System.out.println("7. LogOut");
 			
 			int choice = SmartHealthCareSystem.nextint();
@@ -274,6 +277,7 @@ public class Doctor extends Person {
 			}
 			else if(choice == 11)
 			{
+				updateDoctorChanges();
 				flag2 = false;
 			}
 			else
@@ -285,10 +289,61 @@ public class Doctor extends Person {
 	}
 
 
+	private void updateDoctorChanges() {
+		// TODO Auto-generated method stub
+	
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+			//	boolean status = statement.execute("select * from record where pid = "+ pid);
+				
+				/*String query = "update table patient set"
+						+" name=" + instance.getName()
+						+ " dob=" + instance.getDob()
+						+ " gender=" +instance.getGender()
+						+ " address=" + instance.getAddress()
+						+ " contactno=" + instance.getPhoneNumber()
+						+ " password=" + instance.getPassword()
+						//+"salary"=2000 
+						+" where pid="+ instance.getPid();
+	            //count will give you how many records got updated*/
+				String query = "update doctor set"
+				+" name=" + getName()
+				//+ ", dob=" + getDob()
+				+ " , gender=" +getGender().charAt(0)
+				+ " , address=" + getAddress()
+				+ " , contactno=" + getPhoneNumber()
+				+ " , password=" + getPassword()
+				+ " , DeptId=" + getDeptId()
+				+ " , Rank=" + getRank()
+				+ " , Surgeon=" + getSurgeon()
+				+ " , OpdFees=" + getOpdFees()
+				+" where Did="+ getDocId();
+	    //count will give you how many records got updated
+	            int count = statement.executeUpdate(query);
+				
+	           // System.out.println("Hello " + status);
+				if(count == 1){
+	                System.out.println("Record Updated");
+	            }
+	            else
+	            {
+	            	System.out.println("Record not updated try again");
+	            }
+			}
+	            catch (Exception e) {
+	            	
+	            	System.out.println("Exception " + e.getMessage().toString());
+	}
+		
+	}
+
+
 	private void changeOpdFees() {
 		// TODO Auto-generated method stub
 		System.out.println("current OPD is -> " + getOpdFees());
 		System.out.println("Enter new Opd fees ");
+		int newFees = SmartHealthCareSystem.nextint();
+		setOpdFees(newFees);
 	}
 
 
@@ -296,6 +351,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current surgeon status is -> " + getSurgeon());
 		System.out.println("Enter new surgeon status ");
+		String newSurgeon = SmartHealthCareSystem.sc.nextLine();
+		setSurgeon(newSurgeon);
 	}
 
 
@@ -303,6 +360,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current Rank is -> " + getRank());
 		System.out.println("Enter new rank ");
+		String newRank = SmartHealthCareSystem.sc.nextLine();
+		setRank(newRank);
 	}
 
 
@@ -310,6 +369,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current Department is -> " + getDeptId());
 		System.out.println("Enter new department ");
+		int newDept = SmartHealthCareSystem.nextint();
+		setDeptId(newDept);
 	}
 
 
@@ -317,6 +378,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current password is -> " + getPassword());
 		System.out.println("Enter new password ");
+		String newPassword = SmartHealthCareSystem.sc.nextLine();
+		setPassword(newPassword);
 	}
 
 
@@ -324,6 +387,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current contact number is -> " + getPhoneNumber());
 		System.out.println("Enter new contact number ");
+		String newPhoneNumber = SmartHealthCareSystem.sc.nextLine();
+		setPhoneNumber(newPhoneNumber);
 	}
 
 
@@ -331,6 +396,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current Address is -> " + getAddress());
 		System.out.println("Enter new Address ");
+		String newAddress = SmartHealthCareSystem.sc.nextLine();
+		setAddress(newAddress);
 	}
 
 
@@ -339,6 +406,8 @@ public class Doctor extends Person {
 
 		System.out.println("current Gender is -> " + getGender());
 		System.out.println("Enter new Gender ");
+		String newGender = SmartHealthCareSystem.sc.nextLine();
+		setGender(newGender);
 	}
 
 
@@ -346,7 +415,20 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 
 		System.out.println("current DOB is -> " + getDob());
-		System.out.println("Enter new DOB");
+		//System.out.println("Enter new DOB ");
+		while(true)
+		{
+		System.out.print("Enter new Date of Birth(YYYY-MM-DD): ");
+		try {
+
+		setDob(SmartHealthCareSystem.simpleDateFormat.parse(SmartHealthCareSystem.sc.nextLine()));
+		break;
+
+		} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		System.out.println("Invalid Date Format");
+		}
+		}
 	}
 
 
@@ -354,6 +436,8 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		System.out.println("current name is -> " + getName());
 		System.out.println("Enter new name ");
+		String newName = SmartHealthCareSystem.sc.nextLine();
+		setName(newName);
 		
 	}
 
