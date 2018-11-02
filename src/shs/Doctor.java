@@ -179,12 +179,12 @@ public class Doctor extends Person {
 
 	                while(rs.next())
 	                {
-	                	System.out.println("Schedule id is" + rs.getInt("ScheduleId"));
-	                	System.out.println("Doctor id is" + rs.getInt("Did"));
-	                	System.out.println("Date is" + rs.getDate("Date"));
-	                	System.out.println("Start time is" + rs.getTime("StartTime"));
-	                	System.out.println("End time is" + rs.getTime("EndTime"));
-	                	System.out.println("Count of patient is" + rs.getInt("Count_Of_Patients"));
+	                	System.out.println("Schedule id is -> " + rs.getInt("ScheduleId"));
+	                	System.out.println("Doctor id is -> " + rs.getInt("Did"));
+	                	System.out.println("Date is -> " + rs.getDate("Date"));
+	                	System.out.println("Start time is -> " + rs.getTime("StartTime"));
+	                	System.out.println("End time is -> " + rs.getTime("EndTime"));
+	                	System.out.println("Count of patient is -> " + rs.getInt("Count_Of_Patients"));
 	                	//Time tm = new Time(deptId, deptId, deptId);
 	                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
 	                }
