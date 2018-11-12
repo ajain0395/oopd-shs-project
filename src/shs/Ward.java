@@ -2,8 +2,10 @@ package shs;
 
 public class Ward {
 
-	int no;
-	int capacity;
-	String type;
-	int wardCharge;
+	private int wardId;
+	private int capacity;
+	private String type;
+	private int Cost_Per_Day;
+	
+	
 }

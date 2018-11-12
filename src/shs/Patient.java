@@ -85,11 +85,11 @@ public class Patient extends Person {
 	        {
 	            System.out.println("What do you want to update?\n");
 	            
-	            System.out.println("1. Name -> " );
-	            System.out.println("2. Date of Birth -> ");
-	            System.out.println("3. Gender -> ");
-	            System.out.println("4. Address -> ");
-	            System.out.println("5. Contact Number -> ");
+	            System.out.println("1. Name " );
+	            System.out.println("2. Date of Birth ");
+	            System.out.println("3. Gender ");
+	            System.out.println("4. Address ");
+	            System.out.println("5. Contact Number ");
 	            System.out.println("6. Password ");
 	            System.out.println("7. Done all Changes");
 	            
@@ -146,16 +146,6 @@ public class Patient extends Person {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
 		//	boolean status = statement.execute("select * from record where pid = "+ pid);
 			
-			/*String query = "update table patient set"
-					+" name=" + instance.getName()
-					+ " dob=" + instance.getDob()
-					+ " gender=" +instance.getGender()
-					+ " address=" + instance.getAddress()
-					+ " contactno=" + instance.getPhoneNumber()
-					+ " password=" + instance.getPassword()
-					//+"salary"=2000 
-					+" where pid="+ instance.getPid();
-            //count will give you how many records got updated*/
 			String query = "update patient set"
 			+" name='" + getName()+"'"
 			+ ", dob='" + getDob()+"'"
@@ -186,8 +176,20 @@ public class Patient extends Person {
 	{
 		System.out.print("Enter Name: ");
 		setName(SmartHealthCareSystem.sc.nextLine());
-		System.out.print("Enter Gender(M/F): ");
-		setGender(SmartHealthCareSystem.sc.nextLine());
+		
+		while(true)
+		{
+			System.out.print("Enter Gender(M/F): ");
+			setGender(SmartHealthCareSystem.sc.nextLine());
+			if(getGender().length() == 1 && (getGender().equals("M") || getGender().equals("F")))
+			{
+				break;
+			}
+			else{
+			// TODO Auto-generated catch block
+		System.out.println("Invalid Gender input");
+		}
+		}
 		while(true)
 		{
 		System.out.print("Enter Date of Birth(YYYY-MM-DD): ");
@@ -275,7 +277,7 @@ public class Patient extends Person {
                 ResultSet rs = statement.getResultSet();
                 while(rs.next())
                 {
-                	System.out.println("Record Id: " + rs.getInt("RecID"));
+                	System.out.println("\nRecord Id: " + rs.getInt("RecID"));
                 	System.out.println("Admit Date: " + SmartHealthCareSystem.simpleDateFormat.format(rs.getDate("admit_date")));
                 	Date date = rs.getDate("discharge_date");
                 	if(date!=null)
