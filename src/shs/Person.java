@@ -46,7 +46,7 @@ public class Person {
 		// TODO Auto-generated method stub
 
 		System.out.println("current Gender is -> " + getGender());
-		System.out.println("Enter new Gender ");
+		System.out.println("Enter Gender(M/F) ");
 		String newGender = SmartHealthCareSystem.sc.nextLine();
 		setGender(newGender);
 	}
