@@ -1,5 +1,9 @@
 package shs;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 public class Record {
@@ -11,9 +15,126 @@ public class Record {
 	private String disease_Identified;
 	private String location;
 	private int did;
+	
+	
 	public int getRecid() {
 		return recid;
 	}
+	
+	void selectLocation()
+	{
+		while(true)
+		{
+			System.out.println("Select Location");
+			System.out.println("1. OPD\n2. LOCAL");
+			System.out.print("Enter Choice: ");
+			int ch = SmartHealthCareSystem.nextint(); 
+			if(ch == 1)
+			{
+				setLocation("OPD");
+				break;
+			}
+			else if(ch == 2)
+			{
+				setLocation("LOCAL");
+				break;
+			}
+			else
+			{
+				System.out.println("Invalid Input");
+			}
+		}
+	}
+	
+	public void insertRecord()
+	{
+		String query = "INSERT INTO `record`(`Pid`, `Admit_Date`, `Patient_Desc`, `Location`, `Did`) VALUES "+
+	"(?,?,?,?,?)";
+		
+
+    	try {
+    		//		Statement statement = SmartHealthCareSystem.con.createStatement();
+    				PreparedStatement pstmt = null;
+    	            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+    	            pstmt.setInt(1, getPid());
+    	            pstmt.setDate(2, java.sql.Date.valueOf(SmartHealthCareSystem.simpleDateFormat.format(getAdmit_Date())));
+    	            pstmt.setString(3, getPatient_Desc());
+    	            pstmt.setString(4, getLocation());
+    	            pstmt.setInt(5, getDid());
+    	            
+    	            pstmt.executeUpdate();
+    	            
+    		           ResultSet rs = pstmt.getGeneratedKeys();
+    		            if(rs != null && rs.next()){
+    		            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
+    		                setRecid(rs.getInt(1));
+//    		                System.out.println("Registration Successful you id is: " + getPid());
+    		            }
+    	            else
+    	            {
+    	            	System.out.println("Registration Failed");
+    	            }
+    			}
+    	            catch (Exception e) {
+    	            	
+    	            	System.out.println("Exception " + e.getMessage().toString());
+    	}		
+        
+        
+		
+	}
+	public static void updateScedule(int scheduleId) {
+
+		String query2 = "UPDATE `schedule` SET `Count_Of_Patients`=Count_Of_Patients - 1 WHERE ScheduleId="+scheduleId;
+	
+        Statement statement;
+		try {
+			statement = SmartHealthCareSystem.con.createStatement();
+			
+            int count = statement.executeUpdate(query2);
+            if(count == 1)
+            {
+            	System.out.println("Appointment Booked Successfully");
+            }
+	        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        	 
+
+		
+	}
+	
+	public static void deleteRecord(int recId,String date,int dId)
+	{
+		String query = "DELETE FROM `record` WHERE RecId=?";
+		String query2 = "UPDATE `schedule` SET `Count_Of_Patients`=Count_Of_Patients + 1 WHERE Did="+dId+" and Date='"+date+"'";
+		
+        PreparedStatement pstmt;
+        Statement statement;
+		try {
+			pstmt = SmartHealthCareSystem.con.prepareStatement(query);
+			statement = SmartHealthCareSystem.con.createStatement();
+			pstmt.setInt(1, recId);
+	        // execute the delete statement
+	        pstmt.executeUpdate();
+            int count = statement.executeUpdate(query2);
+            if(count == 1)
+            {
+            	System.out.println("Appointment Cancelled Successfully");
+            }
+
+	        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        	 
+        // set the corresponding param
+        
+	}
+	
 	public void setRecid(int recid) {
 		this.recid = recid;
 	}
@@ -59,6 +180,8 @@ public class Record {
 	public void setDid(int did) {
 		this.did = did;
 	}
+
+
 	
 }
 
