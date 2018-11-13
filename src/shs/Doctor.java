@@ -88,7 +88,7 @@ public class Doctor extends Person {
      //   System.out.println("Hello ");
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("select * from doctor where Did = "+ docId +" and password = "+ password);
+			boolean status = statement.execute("select * from doctor where Did = "+ docId +" and password = '"+ password + "'");
            // System.out.println("Hello " + status);
 			if(status){
                 //query is a select query.
@@ -122,16 +122,16 @@ public class Doctor extends Person {
 	
 	public void viewProfile()
 	{
-		System.out.println("Doctor id -> " + getDocId());
-		System.out.println("Doctor name -> " + getName());
-		System.out.println("Date of Birth -> " + getDob());
-		System.out.println("Gender -> " + getGender());
-		System.out.println("Address -> " + getAddress());
-		System.out.println("Contact Number -> " + getPhoneNumber());
-		System.out.println("Department -> " + getDeptId());
-		System.out.println("Rank -> " + getRank());
-		System.out.println("Surgeon - > " + getSurgeon());
-		System.out.println("Opd Fees -> " + getOpdFees());
+		System.out.println("Doctor id \t\t\t-> " + getDocId());
+		System.out.println("Doctor name \t\t\t-> " + getName());
+		System.out.println("Date of Birth \t\t\t-> " + getDob());
+		System.out.println("Gender \t\t\t\t-> " + getGender());
+		System.out.println("Address \t\t\t-> " + getAddress());
+		System.out.println("Contact Number \t\t\t-> " + getPhoneNumber());
+		System.out.println("Department \t\t\t-> " + getDeptId());
+		System.out.println("Rank \t\t\t\t-> " + getRank());
+		System.out.println("Surgeon \t\t\t-> " + getSurgeon());
+		System.out.println("Opd Fees \t\t\t-> " + getOpdFees());
 	}
 	
 	public void loginSuccess()
@@ -144,7 +144,8 @@ public class Doctor extends Person {
 			System.out.println("2. Update Profile");
 			System.out.println("3. View Doctor Schedule");
 			System.out.println("4. Add Appointment Schedule");
-			System.out.println("5. ");
+			System.out.println("5. View Record of Patients Assigned");
+			System.out.println("6. Assist Patient");
 			System.out.println("7. LogOut");
 			
 			int choice = SmartHealthCareSystem.nextint();
@@ -164,6 +165,14 @@ public class Doctor extends Person {
 			{
 				addSchedule();
 			}
+			else if(choice == 5)
+			{
+				viewRecord();
+			}
+			else if(choice == 6)
+			{
+				assistPatient();
+			}
 			else if(choice == 7) 
 			{
 				flag = false;
@@ -173,6 +182,127 @@ public class Doctor extends Person {
 				System.out.println("Wrong choice");
 			}
 		}
+		
+	}
+
+
+	private void assistPatient() {
+		// TODO Auto-generated method stub
+		viewRecord();
+		int patientId = 0;
+		System.out.println("Enter record id of patient you want to assist");
+		int recId = SmartHealthCareSystem.nextint();
+		
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select Pid from record where RecId = "+ recId );
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	
+                	patientId = rs.getInt("Pid");
+                	
+                	/*System.out.println("\n\nRecord id is \t\t\t-> " + rs.getInt("RecId"));
+                	System.out.println("Patient id is \t\t\t-> " + rs.getInt("Pid"));
+                	System.out.println("Admit Date is \t\t\t-> " + rs.getDate("Admit_Date"));
+//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
+  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
+                	System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
+                	//Time tm = new Time(deptId, deptId, deptId);
+*/                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+		if(patientId != 0)
+			viewPatient(patientId);
+	}
+
+
+	private void viewPatient(int patientId) {
+		// TODO Auto-generated method stub
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select * from patient where Pid = "+ patientId );
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	
+                	//patientId = rs.getInt("Pid");
+                	System.out.println("\n\nPatient name is \t\t-> " + rs.getString("Name"));
+                	System.out.println("Date of Birth is \t\t-> " + rs.getDate("DOB"));
+                	System.out.println("Gender is \t\t\t-> " + rs.getString("Gender"));
+                	System.out.println("Address is \t\t\t-> " + rs.getString("Address"));
+                	System.out.println("Phone number is \t\t-> " + rs.getString("ContactNo"));
+//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
+  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
+                	//System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
+                	//Time tm = new Time(deptId, deptId, deptId);
+                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+	}
+
+
+	private void viewRecord() {
+		// TODO Auto-generated method stub
+		
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select * from record where Did = "+ docId );
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	System.out.println("\n\nRecord id is \t\t\t-> " + rs.getInt("RecId"));
+                	System.out.println("Patient id is \t\t\t-> " + rs.getInt("Pid"));
+                	System.out.println("Admit Date is \t\t\t-> " + rs.getDate("Admit_Date"));
+//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
+  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
+                	System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
+                	//Time tm = new Time(deptId, deptId, deptId);
+                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
 		
 	}
 
@@ -272,12 +402,12 @@ public class Doctor extends Person {
 
 	                while(rs.next())
 	                {
-	                	System.out.println("Schedule id is -> " + rs.getInt("ScheduleId"));
-	                	System.out.println("Doctor id is -> " + rs.getInt("Did"));
-	                	System.out.println("Date is -> " + rs.getDate("Date"));
-	                	System.out.println("Start time is -> " + rs.getTime("StartTime"));
-	                	System.out.println("End time is -> " + rs.getTime("EndTime"));
-	                	System.out.println("Count of patient is -> " + rs.getInt("Count_Of_Patients"));
+	                	System.out.println("\n\nSchedule id is \t\t\t-> " + rs.getInt("ScheduleId"));
+	                	System.out.println("Doctor id is \t\t\t-> " + rs.getInt("Did"));
+	                	System.out.println("Date is \t\t\t-> " + rs.getDate("Date"));
+	                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
+	                	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
+	                	System.out.println("Count of patient is \t\t-> " + rs.getInt("Count_Of_Patients"));
 	                	//Time tm = new Time(deptId, deptId, deptId);
 	                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
 	                }
@@ -303,16 +433,16 @@ public class Doctor extends Person {
 		{
 			System.out.println("What do you want to update?\n");
 			
-			System.out.println("1. Doctor name -> " );
-			System.out.println("2. Date of Birth -> ");
-			System.out.println("3. Gender -> ");
-			System.out.println("4. Address -> ");
-			System.out.println("5. Contact Number -> ");
-			System.out.println("6. Password ");
-			System.out.println("7. Department -> ");
-			System.out.println("8. Rank -> ");
-			System.out.println("9. Surgeon - > ");
-			System.out.println("10. Opd Fees -> ");
+			System.out.println("1. Doctor name" );
+			System.out.println("2. Date of Birth");
+			System.out.println("3. Gender");
+			System.out.println("4. Address");
+			System.out.println("5. Contact Number");
+			System.out.println("6. Password");
+			System.out.println("7. Department");
+			System.out.println("8. Rank");
+			System.out.println("9. Surgeon");
+			System.out.println("10. Opd Fees");
 			System.out.println("11. Done all Changes");
 			
 			int choice = SmartHealthCareSystem.nextint();
@@ -382,31 +512,31 @@ public class Doctor extends Person {
 	private void updateDoctorChanges() {
 		// TODO Auto-generated method stub
 	
-			/*try {
+			try {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
 			//	boolean status = statement.execute("select * from record where pid = "+ pid);
 				
-				String query = "update table patient set"
-						+" name=" + instance.getName()
-						+ " dob=" + instance.getDob()
-						+ " gender=" +instance.getGender()
-						+ " address=" + instance.getAddress()
-						+ " contactno=" + instance.getPhoneNumber()
-						+ " password=" + instance.getPassword()
+				/*String query = "update table patient set"
+						+" name=" + getName()
+						+ ", dob=" + getDob()
+						+ ", gender=" +getGender()
+						+ ", address=" + getAddress()
+						+ ", contactno=" + getPhoneNumber()
+						+ ", password=" + getPassword()
 						//+"salary"=2000 
-						+" where pid="+ instance.getPid();
+						+" where pid="+ getD();*/
 	            //count will give you how many records got updated
 				String query = "update doctor set"
-				+" name=" + getName()
-				//+ ", dob=" + getDob()
-				+ " , gender=" +getGender().charAt(0)
-				+ " , address=" + getAddress()
-				+ " , contactno=" + getPhoneNumber()
-				+ " , password=" + getPassword()
-				+ " , DeptId=" + getDeptId()
-				+ " , Rank=" + getRank()
-				+ " , Surgeon=" + getSurgeon()
-				+ " , OpdFees=" + getOpdFees()
+				+" name='" + getName() + "'"
+				+ ", dob='" + SmartHealthCareSystem.javaDateToString(getDob()) + "'"
+				+ " , gender='" +getGender().charAt(0) + "'"
+				+ " , address='" + getAddress() + "'"
+				+ " , contactno='" + getPhoneNumber() + "'"
+				+ " , password='" + getPassword() + "'"
+				+ " , DeptId='" + getDeptId() + "'"
+				+ " , Rank='" + getRank() + "'"
+				+ " , Surgeon='" + getSurgeon() + "'"
+				+ " , OpdFees='" + getOpdFees() + "'"
 				+" where Did="+ getDocId();
 	    //count will give you how many records got updated
 	            int count = statement.executeUpdate(query);
@@ -423,7 +553,7 @@ public class Doctor extends Person {
 	            catch (Exception e) {
 	            	
 	            	System.out.println("Exception " + e.getMessage().toString());
-	}*/
+	}
 		
 	}
 
