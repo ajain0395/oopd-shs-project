@@ -1,5 +1,8 @@
 package shs;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Date;
 
 public class Prescription {
@@ -12,7 +15,7 @@ public class Prescription {
 	private String medicinePrescribed;
 	private Date date;
 	private String status;
-	private String feesPerDay;
+	private int feesPerDay;
 	private String location;
 	private int wardId;
 	public int getHistId() {
@@ -63,10 +66,10 @@ public class Prescription {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getFeesPerDay() {
+	public int getFeesPerDay() {
 		return feesPerDay;
 	}
-	public void setFeesPerDay(String feesPerDay) {
+	public void setFeesPerDay(int feesPerDay) {
 		this.feesPerDay = feesPerDay;
 	}
 	public String getLocation() {
@@ -82,6 +85,70 @@ public class Prescription {
 		this.wardId = wardId;
 	}
 	
+	public void inputPrescription(int docId , int recorId , Date admitDate , int fee)
+	{
+		
+		setdId(docId);
+		
+		setRecId(recorId);
+		
+		System.out.println("\nEnter tests advised ");
+		setTestAdviced(SmartHealthCareSystem.sc.nextLine());
+		
+		System.out.println("\nEnter Medicine advised ");
+		setMedicinePrescribed(SmartHealthCareSystem.sc.nextLine());
+		
+		setDate(admitDate);
+		
+		System.out.println("\nEnter patient's status (critical/non-critical) ");
+		setStatus(SmartHealthCareSystem.sc.nextLine());
+		
+		setFeesPerDay(fee);
+		
+		System.out.println("\nEnter Location of patient (OPD/Local) ");
+		setLocation(SmartHealthCareSystem.sc.nextLine());
+		
+	}
+	
+	public void updatePriscription()
+	{
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+		
+			String query = "INSERT INTO prescription( Did, RecId, Test_Adviced, Medicine_Prescribed, Date , Patient_Status , Fees_Per_Day, Location ) VALUES "
+					+ "(?,?,?,?,?,?,?,?)";
+			PreparedStatement pstmt = null;
+            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, getdId());
+            pstmt.setInt(2, getRecId());
+            pstmt.setString(3, getTestAdviced());
+            pstmt.setString(4, getMedicinePrescribed());
+            pstmt.setString(6, getStatus());
+            pstmt.setDate(5, SmartHealthCareSystem.stringToSqlDate(SmartHealthCareSystem.javaDateToString(getDate())));
+            pstmt.setString(8, getLocation());
+            pstmt.setInt(7, getFeesPerDay());
+            
+//            pstmt.setDate(2, appointDate);
+//            pstmt.setTime(4, endTime);
+//            pstmt.setInt(5, countPatinets);
+//            //pstmt.setString(6, getPassword());
+            pstmt.executeUpdate();
+	           ResultSet rs = pstmt.getGeneratedKeys();
+	            if(rs != null && rs.next()){
+	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
+	                //setPid(rs.getInt(1));
+	                System.out.println("New Prescription added ");
+	            }
+            else
+            {
+            	System.out.println("Registration Failed");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+	}
 	
 	
 }

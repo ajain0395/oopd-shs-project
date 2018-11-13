@@ -190,13 +190,17 @@ public class Doctor extends Person {
 		// TODO Auto-generated method stub
 		viewRecord();
 		int patientId = 0;
+		int recordId =0;
+		int flag=0;
+		Date admitDate = null;
 		System.out.println("Enter record id of patient you want to assist");
 		int recId = SmartHealthCareSystem.nextint();
 		
-		try {
+		try 
+		{
 			Statement statement = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("select Pid from record where RecId = "+ recId );
-           // System.out.println("Hello " + status);
+			boolean status = statement.execute("select Pid,Admit_Date  from record where RecId = "+ recId );
+         // System.out.println("Hello " + status);
 			if(status){
                 //query is a select query.
                 ResultSet rs = statement.getResultSet();
@@ -205,15 +209,7 @@ public class Doctor extends Person {
                 {
                 	
                 	patientId = rs.getInt("Pid");
-                	
-                	/*System.out.println("\n\nRecord id is \t\t\t-> " + rs.getInt("RecId"));
-                	System.out.println("Patient id is \t\t\t-> " + rs.getInt("Pid"));
-                	System.out.println("Admit Date is \t\t\t-> " + rs.getDate("Admit_Date"));
-//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
-  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
-                	System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
-                	//Time tm = new Time(deptId, deptId, deptId);
-*/                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                	admitDate = rs.getDate("Admit_Date");
                 }
     
             }
@@ -222,12 +218,63 @@ public class Doctor extends Person {
             	System.out.println("Error in getting Data");
             }
 		}
-            catch (Exception e) {
-            	
-            	System.out.println("Exception " + e.getMessage().toString());
-}
+        catch (Exception e) 
+		{    	
+        	System.out.println("Exception " + e.getMessage().toString());
+        }
+		
 		if(patientId != 0)
 			viewPatient(patientId);
+		
+		
+		try 
+		{
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select RecId from prescription" );
+         // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	
+                	recordId = rs.getInt("RecId");
+                	if(recordId == recId)
+                	{
+                		flag = 1;
+                	}
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+        catch (Exception e) 
+		{    	
+        	System.out.println("Exception " + e.getMessage().toString());
+        }
+
+		if(flag==1)
+		{
+			System.out.println("\n\n Prescription history exists\n\n");
+			Patient patinetObject = new Patient();
+			patinetObject.seePrescriptions(recId);
+		}
+		else
+		{
+			System.out.println("\n\nNo prescription history exists");
+		}
+		
+		
+		System.out.println("\nEnter new Priscription\n");
+		Prescription pres =  new Prescription();
+		pres.inputPrescription(getDocId() , recId , admitDate , getOpdFees());
+		
+		pres.updatePriscription();
+		
 	}
 
 

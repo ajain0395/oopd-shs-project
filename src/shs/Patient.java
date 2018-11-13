@@ -23,7 +23,7 @@ public class Patient extends Person {
      //   System.out.println("Hello ");
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("select * from patient where pid = "+ pid +" and password = '"+ password+"'");
+			boolean status = statement.execute("select * from patient where pid = "+ pid +" and password = "+ password);
            // System.out.println("Hello " + status);
 			if(status){
                 //query is a select query.
@@ -148,7 +148,7 @@ public class Patient extends Person {
 			
 			String query = "update patient set"
 			+" name='" + getName()+"'"
-			+ ", dob='" + SmartHealthCareSystem.javaDateToString(getDob())+"'"
+			+ ", dob='" + getDob()+"'"
 			+ ", gender='" +getGender()+"'"
 			+ ", address='" + getAddress()+"'"
 			+ ", contactno='" + getPhoneNumber()+"'"
@@ -299,55 +299,9 @@ public class Patient extends Person {
             	System.out.println("Exception " + e.getMessage().toString());
 }
 	}
-	void seePrescriptions(int recId)
+	void seePrescriptions()
 	{
-		try {
-			Statement statement = SmartHealthCareSystem.con.createStatement();
-			Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
-
-			boolean status = statement.execute("select * from prescription where RecId="+ recId);
-			// System.out.println("Hello " + status);
-			if(status){
-                //query is a select query.
-                ResultSet rs = statement.getResultSet();
-                while(rs.next())
-                {
-            //    	System.out.println("Error here 1");
-                	System.out.println("\nPrescription Id: " + rs.getInt("Histid"));
-                	int did = rs.getInt("did");
-                	//System.out.println("Doctor Id: "+ did);
-                	Date date = rs.getDate("date");
-                	if(date!=null)
-                	System.out.println("Date: " + SmartHealthCareSystem.simpleDateFormat.format(date));
-                	System.out.println("Test Adviced: " + rs.getString("Test_Adviced"));
-                	System.out.println("Test Report: " + rs.getString("Test_Report"));
-                	System.out.println("Medicine Prescribed: " + rs.getString("Medicine_Prescribed"));
-                	System.out.println("Patient Status: "+ rs.getString("Patient_Status"));
-          //      	System.out.println("Error here 3");
-                	if(rs.getString("location") !=null && !rs.getString("location").equalsIgnoreCase("opd"))
-                	{
-                		System.out.println("Location: " + rs.getString("location"));
-                		System.out.println("Ward Id: "+ rs.getString("wardid"));
-                	}
-                	
-                	System.out.println("Assigned Doctor Id: " + rs.getString("did"));
-                	statementDoctor.execute("select name from doctor where did=" + did);
-                	ResultSet rsdoc = statementDoctor.getResultSet();
-                	rsdoc.next();
-        //        	System.out.println("Error here 2");
-                	System.out.println("Doctor Name: "+ rsdoc.getString("name"));
-                	
-                       }
-            }
-            else
-            {
-            	System.out.println("Error in getting Data");
-            }
-		}
-            catch (Exception e) {
-            	
-            	System.out.println("Exception " + e.getMessage().toString());
-}		
+		
 	}
 	void cancelAppointment()
 	{
@@ -359,13 +313,12 @@ public class Patient extends Person {
 		boolean flag = true;
 		while(flag)
 		{
-			System.out.println("\n1. See Profile");
+			System.out.println("1. See Profile");
 			System.out.println("2. Update Profile");
 			System.out.println("3. Book Appointment");
 			System.out.println("4. Delete Appointment");
 			System.out.println("5. See Records History");
-			System.out.println("6. See Detailed Records History");
-			System.out.println("7. Logout");
+			System.out.println("6. Logout");
 			System.out.print("Enter Your Choice : ");
 			int choice = SmartHealthCareSystem.nextint();
 			if(choice == 1)
@@ -390,10 +343,6 @@ public class Patient extends Person {
 			}
 			else if(choice == 6)
 			{
-				seeDetailedRecords();
-			}
-			else if(choice == 7)
-			{
 				flag = false;
 			}
 			else
@@ -408,16 +357,6 @@ public class Patient extends Person {
 	//	SmartHealthCareSystem.sc
 	}
 
-	private void seeDetailedRecords() {
-		// TODO Auto-generated method stub
-		int recId;
-		
-			seeRecords();
-			System.out.println("\nEnter Record Id to see details: ");
-			recId = SmartHealthCareSystem.nextint();
-			seePrescriptions(recId);
-		
-	}
 	public Patient() {
 		// TODO Auto-generated constructor stub
 	}
