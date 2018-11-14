@@ -1,9 +1,11 @@
 package shs;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
@@ -19,6 +21,41 @@ public class SmartHealthCareSystem implements Billing {
 	public static Connection con;
 	static String pattern = "yyyy-MM-dd";
 	static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	
+	static Date stringToSqlDate(String dateString)
+	{
+		Date date = Date.valueOf(dateString);
+		
+		return date;
+	}
+	
+	static java.util.Date stringToJavaDate(String dateString)
+	{
+		java.util.Date date = null;
+		try {
+			date = simpleDateFormat.parse(dateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+		return date;
+		
+	}
+	
+	static String sqlDateToString(Date date)
+	{
+		String s = null;
+		s = date.toString();
+		
+		return s;
+	}
+	static String javaDateToString(java.util.Date date)
+	{
+		String s = null;
+		s = simpleDateFormat.format(date);
+		return s;
+		
+	}
 
 	public static String nextintString() {
 		boolean flag = true;
@@ -79,6 +116,8 @@ public class SmartHealthCareSystem implements Billing {
 
 		Doctor doctor = null;
 		Patient patient = null;
+		int id;
+		String password;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
@@ -115,7 +154,11 @@ public class SmartHealthCareSystem implements Billing {
 				choice = nextint();
 				if(choice == 1)
 				{
-				patient = Patient.getPatientById(1, "123");
+					System.out.print("Enter Id: ");
+					id = nextint();
+					System.out.print("Enter Password: ");
+					password = sc.nextLine();
+				patient = Patient.getPatientById(id, password);
 				if (patient == null) {
 					System.out.println("Record Not Found");
 				} else {
@@ -137,7 +180,12 @@ public class SmartHealthCareSystem implements Billing {
 				}
 			
 			} else if (choice == 3) {
-				doctor = Doctor.getDoctorById(1, "123");
+				
+				System.out.print("Enter Id: ");
+				id = nextint();
+				System.out.print("Enter Password: ");
+				password = sc.nextLine();
+				doctor = Doctor.getDoctorById(id, password);
 				if (doctor == null) {
 					System.out.println("Record Not Found");
 				} else {
