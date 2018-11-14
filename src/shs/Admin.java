@@ -13,6 +13,7 @@ public class Admin extends Person
 		// TODO Auto-generated constructor stub
 		this.loginCredentials.setId("ADMIN@123");
 		this.loginCredentials.setPassword("admin@123");
+		
 	}
 	
 	void getDoctorDetails()
