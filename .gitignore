@@ -3,6 +3,7 @@
 *.classpath*
 *.metadata/
 
+.settings/
 
 
 # Log file
