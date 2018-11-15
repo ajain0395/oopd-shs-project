@@ -185,21 +185,97 @@ public class Doctor extends Person {
 		
 	}
 
+	
+	public void displayPatientsToAsist()
+	{
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select * from record where Did = "+ docId + " and Discharge_Date IS NULL " );
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	System.out.println("\n\nRecord id is \t\t\t-> " + rs.getInt("RecId"));
+                	System.out.println("Patient id is \t\t\t-> " + rs.getInt("Pid"));
+                	System.out.println("Admit Date is \t\t\t-> " + rs.getDate("Admit_Date"));
+//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
+  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
+                	System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
+                	//Time tm = new Time(deptId, deptId, deptId);
+                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+	}
 
 	private void assistPatient() {
 		// TODO Auto-generated method stub
-		viewRecord();
+		//viewRecord();
+		displayPatientsToAsist();
+	
+		
 		int patientId = 0;
 		int recordId =0;
 		int flag=0;
+		int recordFlag=0;
 		Date admitDate = null;
 		System.out.println("Enter record id of patient you want to assist");
 		int recId = SmartHealthCareSystem.nextint();
 		
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select * from record where Did = "+ docId + " and Discharge_Date IS NULL " );
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+
+                while(rs.next())
+                {
+                	
+                	if(rs.getInt("RecId") == recId)
+                	{
+                		recordFlag=1;
+                		System.out.println("Patients description is:\n");
+                		System.out.println(rs.getString("Patient_Desc"));
+                	}
+                	
+                }
+    
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            }
+		}
+            catch (Exception e) {
+            	
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+		if(recordFlag != 1)
+		{
+			System.out.println("Invalid Input\n");
+		}
+		else
+		{
+			
+	
 		try 
 		{
 			Statement statement = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("select Pid,Admit_Date  from record where RecId = "+ recId );
+			boolean status = statement.execute("select Pid,Admit_Date, Patient_Desc  from record where RecId = "+ recId );
          // System.out.println("Hello " + status);
 			if(status){
                 //query is a select query.
@@ -210,6 +286,7 @@ public class Doctor extends Person {
                 	
                 	patientId = rs.getInt("Pid");
                 	admitDate = rs.getDate("Admit_Date");
+                	//description = rs.getString("Patient_Desc");
                 }
     
             }
@@ -271,10 +348,208 @@ public class Doctor extends Person {
 		
 		System.out.println("\nEnter new Priscription\n");
 		Prescription pres =  new Prescription();
+		
+		System.out.println("Do you want to refer patinet to another doctor\n1. Yes\n2. No");
+		int referChoice = SmartHealthCareSystem.nextint();
+		if(referChoice == 1)
+		{
+			
+			displayDoctorsToRefer();
+			
+			
+			
+			System.out.println("Enter doctor id of doctor whom you want to refer ");
+			int referId = SmartHealthCareSystem.nextint();
+			
+			System.out.println(rank);
+			int referOtherDepartment = 0;
+			if(rank.equalsIgnoreCase("specialist") || rank.equalsIgnoreCase("senior specialist"))
+			{
+				System.out.println("hello");
+				 referOtherDepartment=1;
+			}
+			
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+				boolean status = statement.execute("select * from doctor " );
+	           
+				if(status){
+	                //query is a select query.
+	                ResultSet rs2 = statement.getResultSet();
+
+	                while(rs2.next())
+	                {
+	                	
+	                	if(rs2.getInt("Did") == referId )
+	                	{
+	                		int depar = rs2.getInt("DeptId");
+	                		if(depar != deptId)
+	                		{
+	                			if(referOtherDepartment == 1 )
+	                			{
+
+	                				try {
+	                					Statement statement2 = SmartHealthCareSystem.con.createStatement();
+	                				
+	                					String query = "update record set"
+	                					+" Did = '" + referId + "'" 
+	                					//+ ", Disease_Identified = '"  + disease + "'"
+	                					+" where Recid="+ recId;
+	                		    //count will give you how many records got updated
+	                		            int count = statement.executeUpdate(query);
+	                					
+	                		           // System.out.println("Hello " + status);
+	                					if(count == 1){
+	                		                System.out.println("Record Updated");
+	                		            }
+	                		            else
+	                		            {
+	                		            	System.out.println("Record not updated try again");
+	                		            }
+	                				}
+	                		            catch (Exception e) {
+	                		            	System.out.println("yaha mara");
+	                		            	System.out.println("Exception " + e.getMessage().toString());
+	                		}
+	                			}
+	                			else
+	                			{
+	                				System.out.println("you can refer to the doctors of your department only");
+	                			}
+	                		}
+	                		else
+	                		{
+	                			try {
+                					Statement statement2 = SmartHealthCareSystem.con.createStatement();
+                				
+                					String query = "update record set"
+                					+" Did = '" + referId + "'" 
+                					//+ ", Disease_Identified = '"  + disease + "'"
+                					+" where Recid="+ recId;
+                		    //count will give you how many records got updated
+                		            int count = statement.executeUpdate(query);
+                					
+                		           // System.out.println("Hello " + status);
+                					if(count == 1){
+                		                System.out.println("Record Updated");
+                		            }
+                		            else
+                		            {
+                		            	System.out.println("Record not updated try again");
+                		            }
+                				}
+                		            catch (Exception e) {
+                		            	System.out.println("ys phir yaha mara");
+                		            	System.out.println("Exception " + e.getMessage().toString());
+                		}
+	                		}
+	                	}
+	                	
+	                	
+	                }
+	               
+	            }
+	            else
+	            {
+	            	System.out.println("Error in getting Data");
+	            }
+			
+			}
+			
+	            catch (Exception e) {
+	            	System.out.println("mujhe lagta h yaha mara");
+	            	System.out.println("Exception " + e.getMessage().toString() );
+	            	//e.printStackTrace();
+	}
+			
+			
+			
+		}
+		
+		
+		
+		else if(referChoice == 2)
+		{
+		
+		
 		pres.inputPrescription(getDocId() , recId , admitDate , getOpdFees());
 		
 		pres.updatePriscription();
 		
+		System.out.println("Do you want to release patient or not?\n1. Yes\n2. No\n");
+		int yes = SmartHealthCareSystem.nextint();
+		if(yes == 1)
+		{
+			
+			System.out.println("Enter disease identified\n");
+			String disease = SmartHealthCareSystem.sc.nextLine();
+			
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+			
+				String query = "update record set"
+				+" Discharge_Date = '" + SmartHealthCareSystem.javaDateToString(new Date()) + "'" 
+				+ ", Disease_Identified = '"  + disease + "'"
+				+" where Recid="+ recId;
+	    //count will give you how many records got updated
+	            int count = statement.executeUpdate(query);
+				
+	           // System.out.println("Hello " + status);
+				if(count == 1){
+	                System.out.println("Record Updated");
+	            }
+	            else
+	            {
+	            	System.out.println("Record not updated try again");
+	            }
+			}
+	            catch (Exception e) {
+	            	
+	            	System.out.println("Exception " + e.getMessage().toString());
+	}
+		
+
+		}
+		
+	}
+		else
+		{
+			System.out.println("wrong choice");
+		}
+		}
+		}
+
+
+	private void displayDoctorsToRefer() {
+		// TODO Auto-generated method stub
+		try {
+		Statement statement = SmartHealthCareSystem.con.createStatement();
+		boolean status = statement.execute("select * from doctor " );
+       
+		if(status){
+            //query is a select query.
+            ResultSet rs = statement.getResultSet();
+
+            while(rs.next())
+            {
+            	
+            	System.out.println("\nDcotor id \t\t\t\t-> " + rs.getInt("Did"));
+            	System.out.println("doctor name is \t\t\t\t-> " + rs.getString("Name"));
+            	System.out.println("Department id is \t\t\t-> " + rs.getInt("DeptId"));
+            	System.out.println("Hospital name is \t\t\t-> " + rs.getString("Hospital"));
+            	
+            }
+
+        }
+        else
+        {
+        	System.out.println("Error in getting Data");
+        }
+	}
+        catch (Exception e) {
+        	
+        	System.out.println("Exception " + e.getMessage().toString());
+}
 	}
 
 
@@ -297,12 +572,8 @@ public class Doctor extends Person {
                 	System.out.println("Gender is \t\t\t-> " + rs.getString("Gender"));
                 	System.out.println("Address is \t\t\t-> " + rs.getString("Address"));
                 	System.out.println("Phone number is \t\t-> " + rs.getString("ContactNo"));
-//                	System.out.println("Start time is \t\t\t-> " + rs.getTime("StartTime"));
-  //              	System.out.println("End time is \t\t\t-> " + rs.getTime("EndTime"));
-                	//System.out.println("Patient Location is \t\t-> " + rs.getString("Location"));
-                	//Time tm = new Time(deptId, deptId, deptId);
-                    //instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
-                }
+//                
+                	}
     
             }
             else
@@ -356,20 +627,33 @@ public class Doctor extends Person {
 
 	private void addSchedule() {
 		// TODO Auto-generated method stub
-		java.sql.Date appointDate;
+		Date appointDate;
 		while(true)
 		{
 			System.out.print("Enter new Appointment Date(YYYY-MM-DD): ");
-			appointDate = java.sql.Date.valueOf(SmartHealthCareSystem.sc.nextLine());
+			try
+			{
+			appointDate = SmartHealthCareSystem.simpleDateFormat.parse(SmartHealthCareSystem.sc.nextLine());
 			break;
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Invalid Date Format");
+				}
 		}
+		
+		
+		
 		System.out.println("Enter start time");
 		Time startTime = getTime();
 		System.out.println("Enter end time");
 		Time endTime = getTime();
-		System.out.println("Enter number of patients you want to accomodate");
+		System.out.println("Enter number of patients you want to accomodate min 5");
 		int countPatinets = SmartHealthCareSystem.nextint();
-		
+		if(countPatinets <5)
+		{
+			countPatinets = 5;
+		}
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
 		
@@ -379,7 +663,7 @@ public class Doctor extends Person {
             pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, getDocId());
             pstmt.setTime(3, startTime);
-            pstmt.setDate(2, appointDate);
+            pstmt.setString(2, SmartHealthCareSystem.javaDateToString(appointDate));
             pstmt.setTime(4, endTime);
             pstmt.setInt(5, countPatinets);
             //pstmt.setString(6, getPassword());
