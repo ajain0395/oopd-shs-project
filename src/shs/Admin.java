@@ -2,6 +2,7 @@ package shs;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class Admin extends Person 
 {
@@ -33,7 +34,7 @@ public class Admin extends Person
 		int i=1;
 		try{
 		Statement stmt = SmartHealthCareSystem.con.createStatement();
-		boolean status = stmt.execute("SELECT Name, Did FROM Doctor");
+		boolean status = stmt.execute("SELECT Name, Did FROM doctor");
 		if(status){
 			ResultSet rs = stmt.getResultSet();
 			while (rs.next()) {
@@ -43,7 +44,7 @@ public class Admin extends Person
 			}
 			System.out.println("Enter Doctor ID for more details or press 0 to exit: ");
 			int did=SmartHealthCareSystem.nextint();
-			ResultSet detail = stmt.executeQuery("SELECT * FROM Doctor where Did="+did);
+			ResultSet detail = stmt.executeQuery("SELECT * FROM doctor where Did="+did);
 			while (detail.next()) {
 				int id = detail.getInt("Did");
 				String name = detail.getString("Name");
@@ -129,7 +130,7 @@ public class Admin extends Person
         System.out.println("Contact No: ");
         String cno=SmartHealthCareSystem.nextintString();
         System.out.println("Password: ");
-        int pass=sc.SmartHealthCareSystem.nextint();
+        String pass=SmartHealthCareSystem.sc.nextLine();
         System.out.println("Department ID: ");
         String depid=sc.nextLine();
         System.out.println("Rank: ");
@@ -140,7 +141,7 @@ public class Admin extends Person
         int fee=SmartHealthCareSystem.nextint();
         try{
         	Statement stmt = SmartHealthCareSystem.con.createStatement();
-        	boolean status = statement.execute("Insert into Doctor values("+id+", "+name+", "+dob+", "+gen+", "+add+", "+cno+", "+pass+", "+depid+", "+rank+", "+sur+", "+fee+")");
+        	boolean status = stmt.execute("Insert into doctor values("+id+", "+name+", "+dob+", "+gen+", "+add+", "+cno+", "+pass+", "+depid+", "+rank+", "+sur+", "+fee+")");
         	if(status)
         	{
         		System.out.println("Doctor has been successfully registered.");
@@ -169,9 +170,8 @@ public class Admin extends Person
 					+ " gender=" +getGender()
 					+ " address=" + getAddress()
 					+ " contactno=" + getPhoneNumber()
-					+ " password=" + getPassword()
-					+" where pid="+ getPid();
-		            int count = statement.executeUpdate(query);
+					+ " password=" + loginCredentials.getPassword();
+		            int count = stmt.executeUpdate(query);
 					if(count == 1){
 		                System.out.println("Record has been updated successfully");
 		            }
@@ -234,7 +234,7 @@ public class Admin extends Person
 		int i=SmartHealthCareSystem.nextint();
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("SELECT * FROM patient where Pid="+i);
+			boolean status = stmt.execute("SELECT * FROM patient where Pid="+i);
 			if(status){
                 ResultSet detail= stmt.getResultSet();
 			while (detail.next()) {
@@ -270,7 +270,7 @@ public class Admin extends Person
 		int i=SmartHealthCareSystem.nextint();
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("SELECT * FROM record where Pid="+i);
+			boolean status = stmt.execute("SELECT * FROM record where Pid="+i);
 			if(status){
                 ResultSet detail= stmt.getResultSet();
                 System.out.println("History for patient ID: "+i+"is shown below: ");
