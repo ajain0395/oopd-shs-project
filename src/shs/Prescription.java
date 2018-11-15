@@ -100,13 +100,40 @@ public class Prescription {
 		
 		setDate(admitDate);
 		
-		System.out.println("\nEnter patient's status (critical/non-critical) ");
-		setStatus(SmartHealthCareSystem.sc.nextLine());
+		System.out.println("\nEnter patient's status\n1. critical\n2. non-critical");
+		int cric = SmartHealthCareSystem.nextint();
+		if(cric==1)
+		{
+			setStatus("critical");
+		}
+		else if(cric ==2 )
+		{
+			setStatus("non-critical");
+		}
+		else
+		{
+			System.out.println("Wrong choice");
+		}
+		//setStatus(SmartHealthCareSystem.sc.nextLine());
 		
 		setFeesPerDay(fee);
 		
-		System.out.println("\nEnter Location of patient (OPD/Local) ");
-		setLocation(SmartHealthCareSystem.sc.nextLine());
+		System.out.println("\nEnter Location of patient\n1. OPD\n2. Local ");
+		int loc = SmartHealthCareSystem.nextint();
+		if(loc==1)
+		{
+			setLocation("OPD");
+		}
+		else if(loc ==2 )
+		{
+			setLocation("Local");
+		}
+		else
+		{
+			System.out.println("Wrong choice");
+		}
+			
+		
 		
 	}
 	
@@ -124,7 +151,7 @@ public class Prescription {
             pstmt.setString(3, getTestAdviced());
             pstmt.setString(4, getMedicinePrescribed());
             pstmt.setString(6, getStatus());
-            pstmt.setDate(5, SmartHealthCareSystem.stringToSqlDate(SmartHealthCareSystem.javaDateToString(getDate())));
+            pstmt.setString(5, SmartHealthCareSystem.javaDateToString(new Date()));
             pstmt.setString(8, getLocation());
             pstmt.setInt(7, getFeesPerDay());
             
