@@ -6,7 +6,7 @@ import java.util.logging.*;
 
 /**
  * 
- *	this class is used for logging exceptions to a text file.
+ *	this class is used for logging exceptions and informations to a text file.
  */
 public class Logging {
 	
