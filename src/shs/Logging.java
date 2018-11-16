@@ -13,15 +13,13 @@ public class Logging {
 	//static variable to make logger available everywhere.
 	public static Logger WRITER;
 	FileHandler fileHandler;
-	static int count = 0;
 	
 	public Logging(String className) {
 		
 		WRITER=Logger.getLogger(className);
 		
 		try {
-			count += 1;
-			String fileName = className+" "+count +".log";
+			String fileName = className +".log";
 			
 			File file=new File(fileName);
 			fileHandler=new FileHandler(fileName,true);
@@ -31,7 +29,6 @@ public class Logging {
 			fileHandler.setFormatter(simpleFormatter);
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

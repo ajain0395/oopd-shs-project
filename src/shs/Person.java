@@ -33,7 +33,7 @@ public class Person {
 		logger.info("Change Contact Number Entry");
 		System.out.println("current contact number is -> " + getPhoneNumber());
 		System.out.println("Enter new contact number ");
-		String newPhoneNumber = SmartHealthCareSystem.sc.nextLine();
+		String newPhoneNumber = SmartHealthCareSystem.nextintString();
 		setPhoneNumber(newPhoneNumber);
 		logger.info("Change Contact Number Exit");
 	}
