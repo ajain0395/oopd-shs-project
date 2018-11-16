@@ -20,10 +20,10 @@ public class Admin extends Person
 	}
 	int adminLogin(){
 		System.out.println("Enter Username: ");
-		String u=SmartHealthCareSystem.nextintString();
+		String u=SmartHealthCareSystem.sc.nextLine();
 		System.out.println("Enter Password: ");
-		String p=SmartHealthCareSystem.nextintString();
-		if(u=="ADMIN@123" && p=="admin@123")
+		String p=SmartHealthCareSystem.sc.nextLine();
+		if(u.equals("ADMIN@123") && p.equals("admin@123"))
 			return 1;
 		else 
 			return 0;
@@ -92,6 +92,7 @@ public class Admin extends Person
 		}
 		}
 		catch(Exception e){
+			logger.warning("hello");
 			System.out.println("Exception " + e.getMessage().toString());
 		}
 		
