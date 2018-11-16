@@ -3,37 +3,53 @@ package shs;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.*;
-import java.util.logging.FileHandler;
 
-
-
+/**
+ * 
+ *	this class is used for logging exceptions to a text file.
+ */
 public class Logging {
 	
+	//static variable to make logger available everywhere.
+	public static Logger WRITER;
+	FileHandler fileHandler;
+	static int count = 0;
+	
 	public Logging(String className) {
-		// TODO Auto-generated constructor stub
-
-		Logger logger = Logger.getLogger(className);
 		
-		String fileName = "";
-		File fileDes = new File(fileName);
+		WRITER=Logger.getLogger(className);
 		
-		FileHandler fileHandler;
 		try {
-			fileHandler = new FileHandler(fileName,true);
-			logger.addHandler(fileHandler);
-			logger.setLevel(Level.INFO);
+			count += 1;
+			String fileName = className+" "+count +".log";
 			
-			SimpleFormatter simpleFormatter = new SimpleFormatter();
+			File file=new File(fileName);
+			fileHandler=new FileHandler(fileName,true);
+			WRITER.addHandler(fileHandler);
+			WRITER.setUseParentHandlers(false);
+			SimpleFormatter simpleFormatter=new SimpleFormatter();
 			fileHandler.setFormatter(simpleFormatter);
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
-		
 	}
-
+	
+	void error(String msg)
+	{
+		WRITER.setLevel(Level.SEVERE);
+		WRITER.severe(msg);
+	}
+	void warning(String msg)
+	{
+		WRITER.setLevel(Level.WARNING);
+		WRITER.warning(msg);
+	}
+	void info(String msg)
+	{
+		WRITER.setLevel(Level.INFO);
+		WRITER.info(msg);
+	}
+	
 }

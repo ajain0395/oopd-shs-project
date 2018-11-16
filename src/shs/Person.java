@@ -10,50 +10,78 @@ public class Person {
 	String gender;
 	private String address;
 	private String phoneNumber;
+	public Logging logger;
+
 	
 	
 	public Person() {
-		// TODO Auto-generated constructor stub
+		
+		logger = new Logging(this.getClass().getName());
+
 	}
 	public Person(String name, Date dob,String gender, String address, String phonenumber) {
-		// TODO Auto-generated constructor stub
 		this.setAddress(address);
 		this.setDob(dob);
 		this.setGender(gender);
 		this.setName(name);
 		this.setPhoneNumber(phonenumber);
+		logger = new Logging(this.getClass().getName());
+
 	}
 	
 	protected void changeContactNumber() {
-		// TODO Auto-generated method stub
+		logger.info("Change Contact Number Entry");
 		System.out.println("current contact number is -> " + getPhoneNumber());
 		System.out.println("Enter new contact number ");
 		String newPhoneNumber = SmartHealthCareSystem.sc.nextLine();
 		setPhoneNumber(newPhoneNumber);
+		logger.info("Change Contact Number Exit");
 	}
 
 
 	protected void changeAddress() {
-		// TODO Auto-generated method stub
+		logger.info("Change Addess Entry");
 		System.out.println("current Address is -> " + getAddress());
 		System.out.println("Enter new Address ");
 		String newAddress = SmartHealthCareSystem.sc.nextLine();
 		setAddress(newAddress);
+		logger.info("Change Addess Exit");
 	}
 
 
 	protected void changeGender() {
-		// TODO Auto-generated method stub
-
+		logger.info("Change Gender Entry");
+		String newGender = null;
+		while(true)
+		{
 		System.out.println("current Gender is -> " + getGender());
-		System.out.println("Enter Gender(M/F) ");
-		String newGender = SmartHealthCareSystem.sc.nextLine();
+		System.out.println("Enter Gender");
+		System.out.print("1. Male\n2. Female\n: ");
+		int ch = 0;
+		ch = SmartHealthCareSystem.nextint();
+		if(ch == 1)
+		{
+			newGender = "M";
+			break;
+		}
+		else if(ch == 2)
+		{
+			newGender = "F";
+			break;
+		}
+		else
+		{
+			System.out.println("Invalid Input");
+			logger.warning("Invalid gender choice");
+		}
+		}
 		setGender(newGender);
+		logger.info("Change Gender Exit");
 	}
 
 
 	protected void changeDOB() {
-		// TODO Auto-generated method stub
+		logger.info("Change Date of Birth Entry");
 
 		System.out.println("current DOB is -> " + getDob());
 		//System.out.println("Enter new DOB ");
@@ -66,19 +94,22 @@ public class Person {
 		break;
 
 		} catch (ParseException e) {
-		// TODO Auto-generated catch block
 		System.out.println("Invalid Date Format");
+		logger.warning("Invalid DOB input");
 		}
 		}
+		logger.info("Change Date of Birth Exit");
 	}
 
 
 	protected void changeName() {
-		// TODO Auto-generated method stub
+		logger.info("Update Name Entry");
 		System.out.println("current name is -> " + getName());
-		System.out.println("Enter new name ");
+		System.out.print("Enter new name: ");
 		String newName = SmartHealthCareSystem.sc.nextLine();
 		setName(newName);
+		logger.info("Update Name Exit");
+
 		
 	}
 	
