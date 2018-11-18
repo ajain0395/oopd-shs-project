@@ -607,8 +607,10 @@ public class Patient extends Person {
 			if(status){
                 //query is a select query.
                 ResultSet rs = statement.getResultSet();
+                int count = 0;
                 while(rs.next())
                 {
+                	count++;
             //    	System.out.println("Error here 1");
                 	System.out.println("\nPrescription Id: " + rs.getInt("Histid"));
                 	int did = rs.getInt("did");
@@ -633,6 +635,10 @@ public class Patient extends Person {
                 	System.out.println("Doctor Name: "+ rsdoc.getString("name"));
          
                        }
+                if(count == 0)
+                {
+                	System.out.println("No prescription's found for the record");
+                }
             }
             else
             {
