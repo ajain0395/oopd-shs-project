@@ -13,12 +13,15 @@ public class Patient extends Person {
 	boolean appointmentflag = false;
 	int selectedDoctorId = 0;
 	String appointmentDate = null;
+	public Logging logger;
 	
 	public Patient(String name, Date dob,String gender, String address, String phonenumber,int pid,String password) {
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated csrc/shs/Logging.javaonstructor stub
 		super(name, dob, gender, address, phonenumber);
+		logger = new Logging(this.getClass().getName());
 		this.setPid(pid);
 		this.setPassword(password);
+		logger.info("User "+ name +" Signed in");
 	}
 	public static Patient getPatientById(int pid,String password)
 	{
@@ -48,26 +51,30 @@ public class Patient extends Person {
             else
             {
             	System.out.println("Error in getting Data");
+            	
             }
 		}
             catch (Exception e) {
             	
             	System.out.println("Exception " + e.getMessage().toString());
+            	
 }
 		return instance;
 	}
 	void seeProfile()
 	{
+		logger.info("seeProfile Entry");
 		System.out.println("ID: " + getPid());
 		System.out.println("Name: " + getName());
 		System.out.println("Date of Birth: " + SmartHealthCareSystem.simpleDateFormat.format(getDob()));
-		//System.out.println("Gender: " + getGender());
 		System.out.println("Address: " + getAddress());
 		System.out.println("Phone Number: "+ getPhoneNumber());
+		logger.info("seeProfile Exit");
 	}
 	
 	void changePassword()
 	{
+		logger.info("Change Password Entry");
 		while(true) {
 			System.out.print("Enter Password: ");
 			setPassword(SmartHealthCareSystem.sc.nextLine());
@@ -80,9 +87,11 @@ public class Patient extends Person {
 				System.out.println("Password length must be atleast of 8 character ");
 			}
 			}
+		logger.info("Change Password Exit");
 	}
 	void updateProfile()
 	{
+		logger.info("Update Profile Entry");
 		 boolean flag2 = true;
 	        while(flag2)
 	        {
@@ -99,8 +108,7 @@ public class Patient extends Person {
 	            int choice = SmartHealthCareSystem.nextint();
 	            if(choice == 1)
 	            {
-	                changeName();
-	                
+	                changeName();   
 	            }
 	            else if(choice ==2)
 	            {
@@ -113,7 +121,6 @@ public class Patient extends Person {
 	            }
 	            else if(choice ==4 )
 	            {
-
 	                changeAddress();
 	            }
 	            else if(choice ==5)
@@ -136,7 +143,7 @@ public class Patient extends Person {
 	                
 	            }
 	        }
-		
+	        logger.info("Update Profile Exit");
 	}
 	
 	void bookAppointment()
@@ -428,13 +435,14 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\n");
+						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
 						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
-						System.out.println(rs.getString("name"));
+						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.println(rs.getString("hospital"));
 					}
 					if(count > 0)
 					{
@@ -599,8 +607,10 @@ public class Patient extends Person {
 			if(status){
                 //query is a select query.
                 ResultSet rs = statement.getResultSet();
+                int count = 0;
                 while(rs.next())
                 {
+                	count++;
             //    	System.out.println("Error here 1");
                 	System.out.println("\nPrescription Id: " + rs.getInt("Histid"));
                 	int did = rs.getInt("did");
@@ -625,6 +635,10 @@ public class Patient extends Person {
                 	System.out.println("Doctor Name: "+ rsdoc.getString("name"));
          
                        }
+                if(count == 0)
+                {
+                	System.out.println("No prescription's found for the record");
+                }
             }
             else
             {
@@ -780,6 +794,7 @@ public class Patient extends Person {
 	}
 	public Patient() {
 		// TODO Auto-generated constructor stub
+		logger = new Logging(this.getClass().getName());
 	}
 	
 	public int getPid() {

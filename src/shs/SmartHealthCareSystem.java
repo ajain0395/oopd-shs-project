@@ -3,20 +3,12 @@ package shs;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class SmartHealthCareSystem implements Billing {
 
-	/*
-	 * Ashish Jain Date date = simpleDateFormat.parse("12-01-2018");
-	 * 
-	 * String pattern = "MM-dd-yyyy"; SimpleDateFormat simpleDateFormat = new
-	 * SimpleDateFormat(pattern); String date = simpleDateFormat.format(new Date());
-	 */
 	public static Scanner sc = new Scanner(System.in);
 	public static Connection con;
 	static String pattern = "yyyy-MM-dd";
@@ -35,7 +27,6 @@ public class SmartHealthCareSystem implements Billing {
 		try {
 			date = simpleDateFormat.parse(dateString);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}
 		return date;
@@ -69,7 +60,6 @@ public class SmartHealthCareSystem implements Billing {
 			}
 		}
 		return str;
-//		return Integer.parseInt('0' + str);
 	}
 	
 	public static int nextint() {
@@ -112,7 +102,6 @@ public class SmartHealthCareSystem implements Billing {
 
 	}
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		Doctor doctor = null;
 		Patient patient = null;
@@ -121,13 +110,8 @@ public class SmartHealthCareSystem implements Billing {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
-			/*
-			 * ResultSet rs = stmt.executeQuery("select * from dummy"); while (rs.next()) {
-			 * System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " +
-			 * rs.getString(3)); }
-			 */
+		
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 
 		boolean flag = true;
@@ -140,7 +124,15 @@ public class SmartHealthCareSystem implements Billing {
 			if(choice == 1)
 			{
 				Admin admin = new Admin();
-				admin.showAdminOptions();
+				if(admin.adminLogin() == 1)
+				{
+					admin.showAdminOptions();	
+				}
+				else
+				{
+					System.out.println("Admin Login Failed");
+				}
+				
 			}
 			else if (choice == 2) {
 			
