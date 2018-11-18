@@ -770,11 +770,9 @@ public class Doctor extends Person {
 			System.out.println("4. Address");
 			System.out.println("5. Contact Number");
 			System.out.println("6. Password");
-			System.out.println("7. Department");
-			System.out.println("8. Rank");
-			System.out.println("9. Surgeon");
-			System.out.println("10. Opd Fees");
-			System.out.println("11. Done all Changes");
+			
+			System.out.println("7. Opd Fees");
+			System.out.println("8. Done all Changes");
 			
 			int choice = SmartHealthCareSystem.nextint();
 			if(choice == 1)
@@ -806,27 +804,13 @@ public class Doctor extends Person {
 
 				changePassword();
 			}
-			else if(choice ==7 )
-			{
-
-				changeDepartment();
-			}
-			else if(choice ==8 )
-			{
-
-				changeRank();
-
-			}
-			else if(choice ==9)
-			{
-				changeSurgeon();
-			}
-			else if(choice == 10)
+			
+			else if(choice == 7)
 			{
 
 				changeOpdFees();
 			}
-			else if(choice == 11)
+			else if(choice == 8)
 			{
 				updateDoctorChanges();
 				flag2 = false;
