@@ -16,7 +16,6 @@ public class Patient extends Person {
 	public Logging logger;
 	
 	public Patient(String name, Date dob,String gender, String address, String phonenumber,int pid,String password) {
-		// TODO Auto-generated csrc/shs/Logging.javaonstructor stub
 		super(name, dob, gender, address, phonenumber);
 		logger = new Logging(this.getClass().getName());
 		this.setPid(pid);
@@ -153,7 +152,53 @@ public class Patient extends Person {
 		record.setPatient_Desc(SmartHealthCareSystem.sc.nextLine());
 		record.selectLocation();
 		appointmentDate = null;
-		selectDepartment();
+		boolean flag2 = true;
+		while(flag2)
+		{
+			System.out.println("\nSelect Doctor Menu");
+			System.out.println("1. Select Doctor Department automatically by description");
+			System.out.println("2. Select Doctor By Department");
+			System.out.println("3. Select Doctor by Name");
+			System.out.println("4. Select Doctor by Address");
+			System.out.println("5. Select Doctor by Id");
+			System.out.println("0. Previous Menu");
+			System.out.print("Enter Choice: ");
+			int choice = SmartHealthCareSystem.nextint();
+			if(choice == 0)
+			{
+				break;
+			}
+			else if(choice ==1)
+			{
+				selectDepartmentAI(record.getPatient_Desc());
+				break;
+			}
+			else if(choice == 2)
+			{
+				selectDepartment();
+				break;
+			}
+			else if(choice == 3)
+			{
+				selectDoctorByName();
+				break;
+			}
+			else if (choice == 4)
+			{
+				selectDoctorByAddress();
+				break;
+			}
+			else if(choice == 5)
+			{
+				selectDoctorById();
+				break;
+			}
+			else
+			{
+				System.out.println("Invalid choice");
+			}
+		}
+		
 		if(appointmentflag && appointmentDate != null)
 		{
 			record.setAdmit_Date(SmartHealthCareSystem.stringToJavaDate(appointmentDate));
@@ -163,7 +208,332 @@ public class Patient extends Person {
 		}
 		
 	}
-	
+	int getScore(String description, String tags)
+	{
+		int score = 0;
+		tags = tags.toLowerCase();
+		description = description.toLowerCase();
+		String []words = tags.split(",");
+		for(int i = 0; i < words.length ;i++)
+		{
+			if(description.indexOf(words[i]) != -1)
+			{
+				score++;
+			}
+		}		
+		return score;
+	}
+	private void selectDepartmentAI(String description) {
+		// TODO Auto-generated method stub 	
+		/////////////////////////////////////////
+		boolean flag = true;
+		appointmentflag = false;
+		int count = 0;
+		while (flag) {
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+			//	Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
+
+				boolean status = statement.execute(
+						"SELECT * FROM `department`");
+				count = 0;
+				if (status) {
+					// query is a select query.
+					ResultSet rs = statement.getResultSet();
+					if(rs.next())
+					{
+//						System.out.println("Select Department");
+//						System.out.println("S No.\t|\tDepartment Name\n");
+						rs.beforeFirst();
+					}
+					while (rs.next()) {
+						count++;
+//						System.out.print(count+"\t|\t");
+//						System.out.println(rs.getString("DeptName"));
+					}
+					if(count > 0)
+					{
+						System.out.print("Enter Choice or 0 to go to previous options: ");
+						int ch;
+						ch = SmartHealthCareSystem.nextint();
+						if(ch <= count && ch >=1)
+						{
+							rs.beforeFirst();
+							rs.next();
+							int deptId = rs.getInt("deptid");
+							String deptName = rs.getString("deptname");
+							int score = getScore(description, rs.getString("tags"));
+							String tags;
+							while(rs.next())
+							{
+								tags = rs.getString("tags");
+								if(score < getScore(description, tags))
+								{
+									score  = getScore(description, tags);
+									deptId = rs.getInt("deptid");
+									deptName  = rs.getString("deptname");
+								}
+							}
+							
+							System.out.println("Selected Department is " + deptName);
+							System.out.print("Press Y to Continue with selected department: ");
+							if(!SmartHealthCareSystem.sc.nextLine().equalsIgnoreCase("Y"))
+							{
+								flag = false;
+							}
+							else
+							{
+							selectDoctorByDepartment(deptId);
+							}
+							if(appointmentflag)
+								flag = false;
+						}
+						else if(ch == 0)
+						{
+							flag = false;
+						}
+						else
+						{
+							System.out.println("Invalid Input");
+						}
+					}
+					else
+					{
+						System.out.println("No Departments Registered");
+						flag = false;
+					}
+				} else {
+					System.out.println("Error in getting Data");
+				}
+			} catch (Exception e) {
+				
+				System.out.println("Exception " + e.getMessage().toString());
+
+			}
+			
+		}
+
+
+		/////////////////////////////////////////
+		
+	}
+	private void selectDoctorById() {
+
+			///////////////////////////////////////////////////////
+			boolean flag = true;
+			while (flag) {
+				System.out.print("Enter Doctor Id: ");
+				int docid = SmartHealthCareSystem.nextint();
+				int count = 0;
+				try {
+					Statement statement = SmartHealthCareSystem.con.createStatement();
+				//	Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
+
+					boolean status = statement.execute(
+							"SELECT * FROM `doctor` WHERE did=" +docid);
+					count = 0;
+					if (status) {
+						// query is a select query.
+						ResultSet rs = statement.getResultSet();
+						if(rs.next())
+						{
+							count++;
+							rs.beforeFirst();
+						}
+						if(count > 0)
+						{
+								rs.next();
+								selectedDoctorId = docid;
+								System.out.println("Selected Doctor\t\t: "+ rs.getString("name"));
+								System.out.println("Selected Doctor Hospital\t: "+rs.getString("hospital"));
+								selectDoctorSchedule(docid);
+								flag = false;
+						}
+						else
+						{
+							System.out.println("Invalid Doctor id");
+							System.out.print("Press 'Y' to search again any other key for previous options: ");
+							if(!SmartHealthCareSystem.sc.nextLine().equalsIgnoreCase("y"))
+							{
+								flag = false;
+							}
+						}
+					} 
+					else {
+						System.out.println("Error in getting Data");
+					}
+				} catch (Exception e) {
+					System.out.println("Exception " + e.getMessage().toString());
+
+				}
+				
+			}
+
+			//////////////////////////////////////////////////////
+		
+	}
+	private void selectDoctorByAddress() {
+		
+		boolean flag = true;
+		int count = 0;
+		String docaddress;
+		while (flag) {
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+			//	Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
+				System.out.print("Enter Address: ");
+				docaddress = SmartHealthCareSystem.sc.nextLine();
+				boolean status = statement.execute(
+						"SELECT * FROM `doctor` WHERE address='" +docaddress+"'" );
+				count = 0;
+				if (status) {
+					// query is a select query.
+					ResultSet rs = statement.getResultSet();
+					if(rs.next())
+					{
+						System.out.println("Select Doctor");
+						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
+						rs.beforeFirst();
+					}
+					while (rs.next()) {
+						count++;
+						System.out.print(count+"\t|\t");
+						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.println(rs.getString("hospital"));
+					}
+					if(count > 0)
+					{
+						System.out.print("Enter Choice or 0 to go to previous options: ");
+						int ch;
+						ch = SmartHealthCareSystem.nextint();
+						if(ch <= count && ch >=1)
+						{
+							rs.beforeFirst();
+							int dId = 0;
+							int tmpcount = 0;
+							while(rs.next())
+							{
+								tmpcount++;
+								dId = rs.getInt("did");
+								if(tmpcount == ch)
+								{
+									break;
+								}
+							}
+							selectedDoctorId = dId;
+							selectDoctorSchedule(dId);
+							flag = false;
+						}
+						else if(ch == 0)
+						{
+							flag = false;
+						}
+						else
+						{
+							System.out.println("Invalid Input");
+						}
+					}
+					else
+					{
+						System.out.println("No Doctors present with Address "+ docaddress);
+						System.out.print("Press 'Y' to search again or any other key for previous options: ");
+						if(!SmartHealthCareSystem.sc.nextLine().equalsIgnoreCase("y"))
+						{
+							flag = false;
+						}					}
+				} else {
+					System.out.println("Error in getting Data");
+				}
+			} catch (Exception e) {
+				System.out.println("Exception " + e.getMessage().toString());
+
+			}
+			
+		}
+
+		
+	}
+	private void selectDoctorByName() {
+		boolean flag = true;
+		int count = 0;
+		String docname;
+		while (flag) {
+			try {
+				Statement statement = SmartHealthCareSystem.con.createStatement();
+			//	Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
+				System.out.print("Enter Name: ");
+				docname = SmartHealthCareSystem.sc.nextLine();
+				boolean status = statement.execute(
+						"SELECT * FROM `doctor` WHERE name='" +docname+"'" );
+				count = 0;
+				if (status) {
+					// query is a select query.
+					ResultSet rs = statement.getResultSet();
+					if(rs.next())
+					{
+						System.out.println("Select Doctor");
+						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
+						rs.beforeFirst();
+					}
+					while (rs.next()) {
+						count++;
+						System.out.print(count+"\t|\t");
+						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.println(rs.getString("hospital"));
+					}
+					if(count > 0)
+					{
+						System.out.print("Enter Choice or 0 to go to previous options: ");
+						int ch;
+						ch = SmartHealthCareSystem.nextint();
+						if(ch <= count && ch >=1)
+						{
+							rs.beforeFirst();
+							int dId = 0;
+							int tmpcount = 0;
+							while(rs.next())
+							{
+								tmpcount++;
+								dId = rs.getInt("did");
+								if(tmpcount == ch)
+								{
+									break;
+								}
+							}
+							selectedDoctorId = dId;
+							selectDoctorSchedule(dId);
+							flag = false;
+						}
+						else if(ch == 0)
+						{
+							flag = false;
+						}
+						else
+						{
+							System.out.println("Invalid Input");
+						}
+					}
+					else
+					{
+						System.out.println("No Doctors present with Name "+ docname);
+						System.out.print("Press 'Y' to search again or any other key for previous options: ");
+						if(!SmartHealthCareSystem.sc.nextLine().equalsIgnoreCase("y"))
+						{
+							flag = false;
+						}					}
+				} else {
+					System.out.println("Error in getting Data");
+				}
+			} catch (Exception e) {
+				System.out.println("Exception " + e.getMessage().toString());
+
+			}
+			
+		}
+
+
+		
+	}
 	void updatePatient(/*Patient instance*/)
 	{
 		try {
@@ -210,7 +580,6 @@ public class Patient extends Person {
 				break;
 			}
 			else{
-			// TODO Auto-generated catch block
 		System.out.println("Invalid Gender input");
 		}
 		}
@@ -223,7 +592,6 @@ public class Patient extends Person {
 			break;
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 		System.out.println("Invalid Date Format");
 		}
 		}
@@ -287,7 +655,7 @@ public class Patient extends Person {
 	                }
 	                if(count > 0)
 					{
-						System.out.println("Enter Choice or 0 to go to previous options: ");
+						System.out.print("Enter Choice or 0 to go to previous options: ");
 						int ch;
 						ch = SmartHealthCareSystem.nextint();
 						if(ch <= count && ch >=1)
@@ -308,7 +676,6 @@ public class Patient extends Person {
 							}
 							selectedDoctorId = dId; 
 							appointmentDate = rs.getString("Date");
-							//System.out.println("ashish_ Date: " + appointmentDate);
 							appointmentflag = true;
 							Record.updateScedule(scheduleId);
 							flag = false;
@@ -370,7 +737,7 @@ public class Patient extends Person {
 					}
 					if(count > 0)
 					{
-						System.out.println("Enter Choice or 0 to go to previous options: ");
+						System.out.print("Enter Choice or 0 to go to previous options: ");
 						int ch;
 						ch = SmartHealthCareSystem.nextint();
 						if(ch <= count && ch >=1)
@@ -446,7 +813,7 @@ public class Patient extends Person {
 					}
 					if(count > 0)
 					{
-						System.out.println("Enter Choice or 0 to go to previous options: ");
+						System.out.print("Enter Choice or 0 to go to previous options: ");
 						int ch;
 						ch = SmartHealthCareSystem.nextint();
 						if(ch <= count && ch >=1)
@@ -512,7 +879,6 @@ public class Patient extends Person {
             
 	           ResultSet rs = pstmt.getGeneratedKeys();
 	            if(rs != null && rs.next()){
-	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
 	                setPid(rs.getInt(1));
 	                System.out.println("Registration Successful you id is: " + getPid());
 	            }
@@ -541,7 +907,6 @@ public class Patient extends Person {
             
 	           ResultSet rs = pstmt.getGeneratedKeys();
 	            if(rs != null && rs.next()){
-	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
 	                setPid(rs.getInt(1));
 	                System.out.println("Registration Successful you id is: " + getPid());
 	            }
@@ -562,9 +927,7 @@ public class Patient extends Person {
 			boolean status = statement.execute("select * from record where pid = "+ pid);
 			Statement statementDoctor = SmartHealthCareSystem.con.createStatement();
 
-           // System.out.println("Hello " + status);
 			if(status){
-                //query is a select query.
                 ResultSet rs = statement.getResultSet();
                 while(rs.next())
                 {
@@ -774,26 +1137,21 @@ public class Patient extends Person {
 			{
 				System.out.println("Invalid Choice try again");
 			}
-			
-	//		if()
-			
+						
 		}
 		
-	//	SmartHealthCareSystem.sc
 	}
 
 	private void seeDetailedRecords() {
-		// TODO Auto-generated method stub
 		int recId;
 		
 			seeRecords();
-			System.out.println("\nEnter Record Id to see details: ");
+			System.out.print("\nEnter Record Id to see details: ");
 			recId = SmartHealthCareSystem.nextint();
 			seePrescriptions(recId);
 		
 	}
 	public Patient() {
-		// TODO Auto-generated constructor stub
 		logger = new Logging(this.getClass().getName());
 	}
 	
