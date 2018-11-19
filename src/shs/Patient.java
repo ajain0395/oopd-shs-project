@@ -568,20 +568,20 @@ public class Patient extends Person {
                 ResultSet rs = statement.getResultSet();
                 while(rs.next())
                 {
-                	System.out.println("\nRecord Id: " + rs.getInt("RecID"));
-                	System.out.println("Admit Date: " + SmartHealthCareSystem.simpleDateFormat.format(rs.getDate("admit_date")));
+                	System.out.println("\nRecord Id\t\t:" + rs.getInt("RecID"));
+                	System.out.println("Admit Date\t\t:" + SmartHealthCareSystem.simpleDateFormat.format(rs.getDate("admit_date")));
                 	Date date = rs.getDate("discharge_date");
                 	if(date!=null)
-                	System.out.println("Discharge Date: " + SmartHealthCareSystem.simpleDateFormat.format(date));
-                	System.out.println("Record Description: " + rs.getString("patient_desc"));
-                	System.out.println("Disease Identified: " + rs.getString("disease_identified"));
-                	System.out.println("Location: " + rs.getString("location"));
-                	System.out.println("Assigned Doctor Id: " + rs.getString("did"));
+                	System.out.println("Discharge Date:\t\t" + SmartHealthCareSystem.simpleDateFormat.format(date));
+                	System.out.println("Record Description:\t\t" + rs.getString("patient_desc"));
+                	System.out.println("Disease Identified:\t\t" + rs.getString("disease_identified"));
+                	System.out.println("Location\t\t\t:" + rs.getString("location"));
+                	System.out.println("Assigned Doctor Id\t:" + rs.getString("did"));
                 	statementDoctor.execute("select name from doctor where did=" + rs.getInt("did"));
                 	ResultSet rsdoc = statementDoctor.getResultSet();
                 	rsdoc.next();
         //        	System.out.println("Error here 2");
-                	System.out.println("Doctor Name: "+ rsdoc.getString("name"));
+                	System.out.println("Doctor Name:\t\t"+ rsdoc.getString("name"));
 
                 	//                    instance = new Patient(rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"), rs.getInt("pid"), rs.getString("password"));
                 }
@@ -612,27 +612,27 @@ public class Patient extends Person {
                 {
                 	count++;
             //    	System.out.println("Error here 1");
-                	System.out.println("\nPrescription Id: " + rs.getInt("Histid"));
+                	System.out.println("\nPrescription Id\t:" + rs.getInt("Histid"));
                 	int did = rs.getInt("did");
                 	//System.out.println("Doctor Id: "+ did);
                 	Date date = rs.getDate("date");
                 	if(date!=null)
-                	System.out.println("Date: " + SmartHealthCareSystem.simpleDateFormat.format(date));
-                	System.out.println("Test Adviced: " + rs.getString("Test_Adviced"));
-                	System.out.println("Medicine Prescribed: " + rs.getString("Medicine_Prescribed"));
-                	System.out.println("Patient Status: "+ rs.getString("Patient_Status"));
+                	System.out.println("Date\t\t\t:" + SmartHealthCareSystem.simpleDateFormat.format(date));
+                	System.out.println("Test Adviced\t\t:" + rs.getString("Test_Adviced"));
+                	System.out.println("Medicine Prescribed\t:" + rs.getString("Medicine_Prescribed"));
+                	System.out.println("Patient Status\t\t:"+ rs.getString("Patient_Status"));
           //      	System.out.println("Error here 3");
                 	if(rs.getString("location") !=null)
                 	{
-                		System.out.println("Location: " + rs.getString("location"));
+                		System.out.println("Location\t\t:" + rs.getString("location"));
                 	}
                 	
-                	System.out.println("Assigned Doctor Id: " + rs.getString("did"));
+                	System.out.println("Assigned Doctor Id\t:" + rs.getString("did"));
                 	statementDoctor.execute("select name from doctor where did=" + did);
                 	ResultSet rsdoc = statementDoctor.getResultSet();
                 	rsdoc.next();
         //        	System.out.println("Error here 2");
-                	System.out.println("Doctor Name: "+ rsdoc.getString("name"));
+                	System.out.println("Doctor Name\t\t:"+ rsdoc.getString("name"));
          
                        }
                 if(count == 0)
@@ -670,16 +670,16 @@ public class Patient extends Person {
 					while (rs.next()) {
 						System.out.println("");
 						count++;
-						System.out.println("\nRecord Number: " + count);
-						System.out.println("Appointment Date: "
+						System.out.println("\nRecord Number:\t\t" + count);
+						System.out.println("Appointment Date:\t\t"
 								+ SmartHealthCareSystem.simpleDateFormat.format(rs.getDate("admit_date")));
-						System.out.println("Location: " + rs.getString("location"));
-						System.out.println("Assigned Doctor Id: " + rs.getString("did"));
+						System.out.println("Location:\t\t" + rs.getString("location"));
+						System.out.println("Assigned Doctor Id:\t\t" + rs.getString("did"));
 						statementDoctor.execute("select name from doctor where did=" + rs.getInt("did"));
 						ResultSet rsdoc = statementDoctor.getResultSet();
 						rsdoc.next();
-						System.out.println("Doctor Name: " + rsdoc.getString("name"));
-						System.out.println("Record Description: " + rs.getString("patient_desc"));
+						System.out.println("Doctor Name:\t\t" + rsdoc.getString("name"));
+						System.out.println("Record Description:\t\t" + rs.getString("patient_desc"));
 					}
 					if(count > 0)
 					{
