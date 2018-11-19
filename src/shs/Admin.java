@@ -19,6 +19,7 @@ public class Admin extends Person
 		
 	}
 	int adminLogin(){
+		logger.info("adminLogin Entry");
 		System.out.println("Enter Username: ");
 		String u=SmartHealthCareSystem.sc.nextLine();
 		System.out.println("Enter Password: ");
@@ -31,6 +32,7 @@ public class Admin extends Person
 	
 	void getDoctorDetails()
 	{
+		logger.info("getDoctorDetails Entry");
 		Date dob = new Date();
 		int i=1;
 		try{
@@ -53,6 +55,7 @@ public class Admin extends Person
 				ResultSet detail= statement.getResultSet();
                 if(!detail.isBeforeFirst()){
                     System.out.println("This Doctor ID does not exist, please try again");
+                    logger.warning("Invalid doctor ID entered");
                     return;
                 }
 				while (detail.next()) {
@@ -85,20 +88,25 @@ public class Admin extends Person
 			else
 			{
 				System.out.println("Error in getting Data");
+				logger.warning("DB returned empty set");
+
 			}
         }
 		else{
 			System.out.println("Error in getting Data");
+			logger.warning("SELECT query returned false status");
+
 		}
 		}
 		catch(Exception e){
-			logger.warning("hello");
 			System.out.println("Exception " + e.getMessage().toString());
 		}
+		logger.info("getDoctorDetails Exit");
 		
 	}
 	void getPatientDetails()
 	{
+		logger.info("getPatientDetails Entry");
 		int i=1;
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
@@ -128,46 +136,59 @@ public class Admin extends Person
 					else
 					{
 						System.out.println("Wrong choice. Please enter a valid no.");
+						logger.warning("Invalid choice");
 					}
 				}
 			}
 			else
 			{
 				System.out.println("Error in getting Data");
+				logger.warning("Could not get data from DB");
 			}
 		}
 		catch(Exception e){
 			System.out.println("Exception " + e.getMessage().toString());
 		}
+		logger.info("getPatientDetails Exit");
 	}
 	void registerDoctor()
 	{
+		logger.info("registerDoctor Entry");
 		System.out.println("Enter the following registration details: ");
 		System.out.println("Name");
 		String name=SmartHealthCareSystem.sc.nextLine();
-		java.sql.Date dob;
-		while(true)
-		{
-			System.out.print("Enter new Appointment Date(YYYY-MM-DD): ");
-			dob= java.sql.Date.valueOf(SmartHealthCareSystem.sc.nextLine());
-			break;
+		Date dob;
+		while(true){
+			System.out.print("DOB(YYYY-MM-DD): ");
+			try{
+				dob=SmartHealthCareSystem.simpleDateFormat.parse(SmartHealthCareSystem.sc.nextLine());
+				break;
+			}
+			catch(ParseException e){
+				System.out.println("Invalid Date Format");
+				logger.warning("Invalid Date entered");
+			}
 		}
 		String gen;
 		while(true)
 		{
-			System.out.print("Gender(M/F): ");
-			gen=SmartHealthCareSystem.sc.nextLine();
-			if(gen.equalsIgnoreCase("female")||gen.equalsIgnoreCase("male")||gen.equalsIgnoreCase("m")||gen.equalsIgnoreCase("f"))
+			System.out.print("1. Male\n2. Female\n: ");
+			int ch = 0;
+			ch = SmartHealthCareSystem.nextint();
+			if(ch == 1)
 			{
-				if(gen.equalsIgnoreCase("female")||gen.equalsIgnoreCase("f"))
-					gen="F";
-				else
-					gen="M";
+				gen= "M";
 				break;
 			}
-			else{
-			// TODO Auto-generated catch block
-				System.out.println("Invalid Gender input");
+			else if(ch == 2)
+			{
+				gen= "F";
+				break;
+			}
+			else
+			{
+				System.out.println("Invalid Input");
+				logger.warning("Invalid gender choice");
 			}
 		}
         System.out.println("Address: ");
@@ -176,11 +197,35 @@ public class Admin extends Person
         String cno=SmartHealthCareSystem.nextintString();
         System.out.println("Password: ");
         String pass=SmartHealthCareSystem.sc.nextLine();
-        System.out.println("Department ID: ");
-        int depid=SmartHealthCareSystem.nextint();
+        System.out.println("Select Department ID: ");
+        int depid=0;
+        try{
+			Statement stmt = SmartHealthCareSystem.con.createStatement();
+			boolean status = stmt.execute("SELECT DeptId,DeptName FROM department");
+			if(status){
+				ResultSet rs = stmt.getResultSet();
+				while(rs.next()) {
+				  String dName = rs.getString("DeptName");
+				  int did=rs.getInt("DeptId");
+				  System.out.println(did+". "+dName + "\n");
+				}
+				depid=SmartHealthCareSystem.nextint();
+			}
+            else
+            {
+            	System.out.println("Unable to fetch data from table department");
+            	logger.warning("Could not get data from department");
+
+            }
+		
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception " + e.getMessage().toString());
+		}
         String rank;
         while(true){
-        	System.out.println("Select rank: 1. Resident\n2. Senior Resident\n3. Specialist\n4. Senior Specialist");
+        	System.out.println("Select rank: 1. Resident\n2. Senior Resident\n3. Specialist\n4. Senior Specialist\n");
         	int r=SmartHealthCareSystem.nextint();
         	if(r==1){
         		rank="Resident";
@@ -200,10 +245,11 @@ public class Admin extends Person
         	}
         	else
         		System.out.println("Invalid input. Please try again.");
+        		logger.warning("Invalid Rank choice");
         }
         String sur;
         while(true){
-        	System.out.println("Surgeon : 1. NO\n2.Surgeon\n3.Senior Surgeon");
+        	System.out.println("Surgeon : 1. NO\n2.Surgeon\n3.Senior Surgeon\n");
         	int r=SmartHealthCareSystem.nextint();
         	if(r==1){
         		sur="NO";
@@ -219,6 +265,7 @@ public class Admin extends Person
         	}
         	else
         		System.out.println("Invalid input. Please try again.");
+        		logger.warning("Invalid Surgeon choice");
         }
         System.out.println("OPD Fees: ");
         int fee=SmartHealthCareSystem.nextint();
@@ -233,7 +280,7 @@ public class Admin extends Person
             pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1,name);
             pstmt.setString(3,gen);
-            pstmt.setDate(2,dob);
+            pstmt.setString(2,SmartHealthCareSystem.javaDateToString(dob));
             pstmt.setString(4,add);
             pstmt.setString(5,cno);
             pstmt.setString(6,pass);
@@ -256,40 +303,115 @@ public class Admin extends Person
             	
            	System.out.println("Exception " + e.getMessage().toString());
         }
-		
+        logger.info("registerDoctor Exit");
 		
 
 	}
 	void reassignDoctor()
 	{
-		System.out.println("Enter Record no where you want to reassign doctor: ");
-		int rno=SmartHealthCareSystem.nextint();
-		System.out.println("Enter ID of doctor to assign to record no:"+rno);
-		int did=SmartHealthCareSystem.nextint();
+		logger.info("reassignDoctor Entry");
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
-			String query = "update table patient set"
-					+" name=" + getName()
-					+ " dob=" + getDob()
-					+ " gender=" +getGender()
-					+ " address=" + getAddress()
-					+ " contactno=" + getPhoneNumber()
-					+ " password=" + loginCredentials.getPassword();
-		            int count = stmt.executeUpdate(query);
-					if(count == 1){
-		                System.out.println("Record has been updated successfully");
-		            }
-		            else
-		            {
-		            	System.out.println("Record not updated.Please try again");
-		            }
+			boolean status = stmt.execute("SELECT * FROM record WHERE Discharge_Date IS NULL");
+			if(status){
+				ResultSet rs = stmt.getResultSet();
+				System.out.println("Record ID\tPatient ID\tAdmit Date\tPatient Description\tDisease Identified\tLocation");
+				while(rs.next()) {
+				  int rid= rs.getInt("RecId");
+				  int pid= rs.getInt("Pid");
+				  Date adate= rs.getDate("Admit_Date");
+				  String desc= rs.getString("Patient_Desc");
+				  String diden=rs.getString("Disease_Identified");
+				  String loc= rs.getString("Location");
+				  int did= rs.getInt("Did");
+				  System.out.println(rid+"\t\t\t"+pid+"\t"+adate+"\t\t"+desc+"\t"+diden+"\t"+loc+"\t"+did);
+				}
+			}
+            else
+            {
+            	System.out.println("No record found to be eligible for reassigning doctor");
+            	logger.warning("No record with NULL discharge date in DB");
+            }
+		
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception " + e.getMessage().toString());
+		}
+		int c=0,rno;
+		while(true)
+		{
+			System.out.println("Enter Record no where you want to reassign doctor: ");
+			rno=SmartHealthCareSystem.nextint();
+			try{
+				Statement s= SmartHealthCareSystem.con.createStatement();
+				boolean stat = s.execute("SELECT * FROM record WHERE RecId="+rno);
+				if(stat){
+					ResultSet rs = s.getResultSet();
+					while(rs.next()) {
+						++c;
+					}
+					if(c==1)
+						break;
+					else{
+						System.out.println("You entered wrong Record ID, please try again");
+						logger.warning("Invalid record id entered");
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+		}
+		int did,o=0;
+		while(true)
+		{
+			System.out.println("Enter ID of doctor to assign to record no:"+rno);
+			did=SmartHealthCareSystem.nextint();
+			try{
+				Statement s= SmartHealthCareSystem.con.createStatement();
+				boolean stat=s.execute("SELECT * FROM doctor WHERE Did="+did);
+				if(stat){
+					ResultSet rs = s.getResultSet();
+					while(rs.next()) {
+						++o;
+					}
+					if(o==1)
+						break;
+					else{
+						System.out.println("You entered wrong Doctor ID, please try again");
+						logger.warning("Invalid doctor id entered");
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+		}
+		try{
+			Statement stmt = SmartHealthCareSystem.con.createStatement();
+			String query = "update record set"
+					+" Did='" +did + "'"
+					+" where Recid="+ rno;
+		    int count = stmt.executeUpdate(query);		
+			if(count == 1){
+	            System.out.println("Record Updated");
+	        }
+			else
+			{
+				System.out.println("Record not updated try again");
+		    }
 		}
 		catch(Exception e){
 			System.out.println(e);
 		}
+		logger.info("reassignDoctor Exit");
 	}
 	void changeCredentials()
 	{
+		logger.info("changeCredentials Entry");
 		System.out.println("Verify credentials to continue further: ");
 		System.out.println("Username: ");
 		String uname=SmartHealthCareSystem.sc.nextLine();
@@ -307,11 +429,14 @@ public class Admin extends Person
 		else
 		{
 			System.out.println("Invalid username or password!");
+			logger.warning("Invalid username or password entered");
 		}
+		logger.info("changeCredentials Exit");
 		
 	}
 	void showAdminOptions()
 	{
+		logger.info("showAdminOptions Entry");
 		int c=10;
 		System.out.println("Select an option: ");
 		while(c!=0){
@@ -338,16 +463,32 @@ public class Admin extends Person
 			}
 			else
 				System.out.println("You entered wrong choice!");
+				logger.warning("Invalid admin option choice");
 		}
+		logger.info("showAdminOptions Exit");
 	}
 	void registerDept()
 	{
+		logger.info("registerDept Entry");
+		System.out.println("To register a new department, enter the following details: ");
+		System.out.println("Department Name: ");
+		String dname=SmartHealthCareSystem.sc.nextLine();
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
-			System.out.println("To register a new department, enter the following details: ");
-			System.out.println("Department Name: ");
-			String dname=SmartHealthCareSystem.sc.nextLine();
-			System.out.println("Doctor ID of HOD: ");
+			boolean status = stmt.execute("SELECT Did,Name FROM doctor WHERE Rank='senior specialist' AND Did NOT IN(Select Did from department)");
+			if(status){
+				ResultSet rs = stmt.getResultSet();
+				while(rs.next()) {
+				  String dName = rs.getString("Name");
+				  int did=rs.getInt("Did");
+				  System.out.println(did+". "+dName + "\n");
+				}
+			}
+            else
+            {
+            	System.out.println("Unable to fetch data from table department");
+            }
+			System.out.println("Select ID of HOD from list: ");
 			int id=SmartHealthCareSystem.nextint();
 			String query = "INSERT INTO department(DeptName, Did) VALUES "+ "(?,?)";
 			PreparedStatement pstmt = null;
@@ -369,10 +510,12 @@ public class Admin extends Person
 		{
 			System.out.println("Exception " + e.getMessage().toString());
 		}
+		logger.info("registerDept Exit");
 		
 	}
 	void removeDoctor()
 	{
+		logger.info("removeDoctor Entry");
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
 			boolean status = stmt.execute("SELECT Did,Name,DeptId,OpdFees,Hospital,Rank FROM doctor");
@@ -406,9 +549,11 @@ public class Admin extends Person
 		catch(Exception e){
 			System.out.println(e);
 		}
+		logger.info("removeDoctor Exit");
 	}
 	void showPatientDetails()
 	{
+		logger.info("showPatientDetails Entry");
 		Date dob = new Date();
 		System.out.println("Enter patient ID whose details you want to view: ");
 		int i=SmartHealthCareSystem.nextint();
@@ -446,8 +591,10 @@ public class Admin extends Person
 		catch(Exception e){
 			System.out.println("Exception " + e.getMessage().toString());
 		}
+		logger.info("showPatientDetails Exit");
 	}
 	void showPatientHistory(){
+		logger.info("showPatientHistory Entry");
 		System.out.println("Enter patient ID whose history you want to view: ");
 		int i=SmartHealthCareSystem.nextint();
 		try{
@@ -487,5 +634,6 @@ public class Admin extends Person
 		catch(Exception e){
 			System.out.println("Exception " + e.getMessage().toString());
 		}
+		logger.info("showPatientHistory Exit");
 	}
 }
