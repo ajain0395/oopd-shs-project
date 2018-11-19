@@ -1,5 +1,6 @@
 package shs;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -7,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-public class SmartHealthCareSystem implements Billing {
+public class SmartHealthCareSystem {
 
 	public static Scanner sc = new Scanner(System.in);
 	public static Connection con;
@@ -103,6 +104,35 @@ public class SmartHealthCareSystem implements Billing {
 	}
 	public static void main(String[] args) {
 
+		File theDir = new File("logs");
+
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+		   // System.out.println("creating directory: " + theDir.getName());
+		    boolean result = false;
+
+		    try{
+		        theDir.mkdir();
+		        result = true;
+		    } 
+		    catch(SecurityException se){
+		        //handle it
+		    }        
+		    if(result) {    
+		     //   System.out.println("DIR created");  
+		    }
+		}
+		else
+		{
+			for(File file: theDir.listFiles()) 
+			    if (!file.isDirectory()) 
+			        file.delete();
+		
+		}
+		
+		
+		Logging logger = new Logging("MainLogger");
+		logger.info("Main Method Entry");
 		Doctor doctor = null;
 		Patient patient = null;
 		int id;
@@ -112,6 +142,7 @@ public class SmartHealthCareSystem implements Billing {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
 		
 		} catch (Exception e) {
+			logger.error(e.getMessage().toString());
 		}
 
 		boolean flag = true;
@@ -193,6 +224,8 @@ public class SmartHealthCareSystem implements Billing {
 				System.out.println("Invalid Choice");
 			}
 		}
+		logger.info("Main Method Exit");
+
 	}
 
 }

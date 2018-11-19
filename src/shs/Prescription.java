@@ -11,13 +11,17 @@ public class Prescription {
 	private int dId;
 	private int recId;
 	private String testAdviced;
-	private String testReport;
 	private String medicinePrescribed;
 	private Date date;
 	private String status;
 	private int feesPerDay;
 	private String location;
-	private int wardId;
+	Logging logger;
+	
+	public Prescription() {
+		logger = new Logging(getClass().getName().toString());
+	}
+	
 	public int getHistId() {
 		return histId;
 	}
@@ -42,12 +46,7 @@ public class Prescription {
 	public void setTestAdviced(String testAdviced) {
 		this.testAdviced = testAdviced;
 	}
-	public String getTestReport() {
-		return testReport;
-	}
-	public void setTestReport(String testReport) {
-		this.testReport = testReport;
-	}
+
 	public String getMedicinePrescribed() {
 		return medicinePrescribed;
 	}
@@ -78,16 +77,11 @@ public class Prescription {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public int getWardId() {
-		return wardId;
-	}
-	public void setWardId(int wardId) {
-		this.wardId = wardId;
-	}
+
 	
 	public void inputPrescription(int docId , int recorId , Date admitDate , int fee)
 	{
-		
+		logger.info("inputPrescription Entry");
 		setdId(docId);	
 		setRecId(recorId);		
 		System.out.print("\nAdvise Test: ");
@@ -137,14 +131,14 @@ public class Prescription {
 			System.out.println("Wrong choice");
 		}
 		}	
-		
+		logger.info("inputPrescription Exit");
 		
 	}
 	
 	public void updatePriscription()
 	{
+		logger.info("updatePriscription Entry");
 		try {
-		//	Statement statement = SmartHealthCareSystem.con.createStatement();
 		
 			String query = "INSERT INTO prescription( Did, RecId, Test_Adviced, Medicine_Prescribed, Date , Patient_Status , Fees_Per_Day, Location ) VALUES "
 					+ "(?,?,?,?,?,?,?,?)";
@@ -158,16 +152,11 @@ public class Prescription {
             pstmt.setString(5, SmartHealthCareSystem.javaDateToString(new Date()));
             pstmt.setString(8, getLocation());
             pstmt.setInt(7, getFeesPerDay());
-            
-//            pstmt.setDate(2, appointDate);
-//            pstmt.setTime(4, endTime);
-//            pstmt.setInt(5, countPatinets);
-//            //pstmt.setString(6, getPassword());
+
             pstmt.executeUpdate();
 	           ResultSet rs = pstmt.getGeneratedKeys();
 	            if(rs != null && rs.next()){
-	            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
-	                //setPid(rs.getInt(1));
+
 	                System.out.println("New Prescription added ");
 	            }
             else
@@ -177,9 +166,11 @@ public class Prescription {
 		}
             catch (Exception e) {
             	
-            	System.out.println("Exception " + e.getMessage().toString());
+            	logger.error("Exception " + e.getMessage().toString());
 }
+		logger.info("updatePriscription Exit");
 	}
 	
+
 	
 }

@@ -8,6 +8,7 @@
 
 # Log file
 *.log
+*logs*
 *.sql
 
 # BlueJ files

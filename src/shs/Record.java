@@ -15,6 +15,7 @@ public class Record {
 	private String disease_Identified;
 	private String location;
 	private int did;
+	Logging logger = new Logging(getClass().toString());
 	
 	
 	public int getRecid() {
@@ -23,6 +24,7 @@ public class Record {
 	
 	void selectLocation()
 	{
+		logger.info("selectLocation Entry");
 		while(true)
 		{
 			System.out.println("Select Location");
@@ -44,16 +46,17 @@ public class Record {
 				System.out.println("Invalid Input");
 			}
 		}
+		logger.info("selectLocation Exit");
 	}
 	
 	public void insertRecord()
 	{
+		logger.info("insertRecord Entry");
 		String query = "INSERT INTO `record`(`Pid`, `Admit_Date`, `Patient_Desc`, `Location`, `Did`) VALUES "+
 	"(?,?,?,?,?)";
 		
 
     	try {
-    		//		Statement statement = SmartHealthCareSystem.con.createStatement();
     				PreparedStatement pstmt = null;
     	            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
     	            pstmt.setInt(1, getPid());
@@ -66,9 +69,7 @@ public class Record {
     	            
     		           ResultSet rs = pstmt.getGeneratedKeys();
     		            if(rs != null && rs.next()){
-    		            //    System.out.println("Generated Emp Id: "+rs.getInt(1));
     		                setRecid(rs.getInt(1));
-//    		                System.out.println("Registration Successful you id is: " + getPid());
     		            }
     	            else
     	            {
@@ -77,11 +78,9 @@ public class Record {
     			}
     	            catch (Exception e) {
     	            	
-    	            	System.out.println("Exception " + e.getMessage().toString());
-    	}		
-        
-        
-		
+    	            	logger.error("Exception " + e.getMessage().toString());
+    	}		        
+    	logger.info("insertRecord Exit");
 	}
 	public static void updateScedule(int scheduleId) {
 
@@ -98,8 +97,8 @@ public class Record {
             }
 	        
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("issue in updating Schedule");
+			//e.printStackTrace();
 		}
         	 
 
@@ -127,7 +126,6 @@ public class Record {
 
 	        
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         	 

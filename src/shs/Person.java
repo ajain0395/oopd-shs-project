@@ -61,12 +61,12 @@ public class Person {
 		ch = SmartHealthCareSystem.nextint();
 		if(ch == 1)
 		{
-			newGender = "M";
+			newGender = "Male";
 			break;
 		}
 		else if(ch == 2)
 		{
-			newGender = "F";
+			newGender = "Female";
 			break;
 		}
 		else
