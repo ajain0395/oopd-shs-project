@@ -628,7 +628,7 @@ break;
 			while(true)
 			{
 				
-				System.out.println("Sort patinet by\n1. Name\n2. Id");
+				System.out.println("Sort patient by\n1. Name\n2. Id");
 				int ch = SmartHealthCareSystem.nextint();
 				
 				if(ch==1)
