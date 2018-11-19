@@ -584,6 +584,9 @@ break;
 
 
 	private void viewPatient(int patientId) {
+		
+		
+		
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
 			boolean status = statement.execute("select * from patient where Pid = "+ patientId );
@@ -619,11 +622,34 @@ break;
 		
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
-			boolean status = statement.execute("select * from record where Did = "+ docId );
+			//boolean status = statement.execute("select * from record where Did = "+ docId );
+			
+			boolean status = false;
+			while(true)
+			{
+				
+				System.out.println("Sort patinet by\n1. Name\n2. Id");
+				int ch = SmartHealthCareSystem.nextint();
+				
+				if(ch==1)
+				{
+					status = statement.execute("SELECT * FROM patient,record WHERE patient.Pid=record.Pid and record.Did=" + docId + " and record.Discharge_Date is NULL order BY patient.Name ");
+					break;
+				}
+				else if(ch==2)
+				{	
+					status = statement.execute("SELECT * FROM patient,record WHERE patient.Pid=record.Pid and record.Did=" + docId + " and record.Discharge_Date is NULL order BY patient.Name ");
+					break;
+				}
+				else
+				{
+					System.out.println("Wrong choice");
+				}
+			}
 			if(status){
                 //query is a select query.
                 ResultSet rs = statement.getResultSet();
-                if(rs.next())
+                if(!rs.next())
     			{
     				System.out.println("No Patients Assigned");
     				return;
@@ -631,7 +657,23 @@ break;
                 rs.beforeFirst();
                 while(rs.next())
                 {
-                	System.out.println("\n\nRecord id is \t\t\t-> " + rs.getInt("RecId"));
+                	/*int patinetId = rs.getInt("Pid");
+                	try
+                	{
+                		Statement statement2 = SmartHealthCareSystem.con.createStatement();
+            			boolean status2 = statement.execute("select * from patient where Pid = "+ patinetId );
+            			if(status2)
+            			{
+            				ResultSet rs2 = statement2.getResultSet();
+            				while(rs2.next())
+            				{
+            					
+            				}
+            			}
+                	}*/
+                	System.out.println("\nPatient Name is \t\t-> " + rs.getString("Name"));
+                	System.out.println("Patient Discription \t\t-> " + rs.getString("Disease_Identified"));
+                	System.out.println("Record id is \t\t\t-> " + rs.getInt("RecId"));
                 	System.out.println("Patient id is \t\t\t-> " + rs.getInt("Pid"));
                 	System.out.println("Admit Date is \t\t\t-> " + rs.getDate("Admit_Date"));
 
