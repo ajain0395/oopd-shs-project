@@ -19,7 +19,7 @@ public class Prescription {
 	Logging logger;
 	
 	public Prescription() {
-		logger = new Logging(getClass().getName().toString());
+		logger = new Logging(getClass().getName());
 	}
 	
 	public int getHistId() {

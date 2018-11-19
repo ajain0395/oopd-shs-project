@@ -15,7 +15,11 @@ public class Record {
 	private String disease_Identified;
 	private String location;
 	private int did;
-	Logging logger = new Logging(getClass().toString());
+	Logging logger;
+	
+	public Record() {
+	logger =  new Logging(getClass().getName());
+	}
 	
 	
 	public int getRecid() {

@@ -233,33 +233,28 @@ public class Patient extends Person {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
 
 				boolean status = statement.execute(
-						"SELECT * FROM `department`");
+						"SELECT * FROM `department` ORDER BY DeptId");
 				count = 0;
 				if (status) {
 					// query is a select query.
 					ResultSet rs = statement.getResultSet();
-					if(rs.next())
-					{
-
-						rs.beforeFirst();
-					}
 					while (rs.next()) {
 						count++;
-
 					}
 					if(count > 0)
 					{
-						System.out.print("Enter Choice or 0 to go to previous options: ");
-						int ch;
-						ch = SmartHealthCareSystem.nextint();
-						if(ch <= count && ch >=1)
-						{
+				//		System.out.print("Enter Choice or 0 to go to previous options: ");
+				//		int ch;
+				//		ch = SmartHealthCareSystem.nextint();
+					//	if(ch <= count && ch >=1)
+					//	{
 							rs.beforeFirst();
 							rs.next();
 							int deptId = rs.getInt("deptid");
 							String deptName = rs.getString("deptname");
 							int score = getScore(description, rs.getString("tags"));
 							String tags;
+							rs.beforeFirst();
 							while(rs.next())
 							{
 								tags = rs.getString("tags");
@@ -283,15 +278,7 @@ public class Patient extends Person {
 							}
 							if(appointmentflag)
 								flag = false;
-						}
-						else if(ch == 0)
-						{
-							flag = false;
-						}
-						else
-						{
-							System.out.println("Invalid Input");
-						}
+					//	}
 					}
 					else
 					{
