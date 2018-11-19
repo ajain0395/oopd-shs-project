@@ -13,10 +13,8 @@ public class Admin extends Person
 	public Admin() {
 		loginCredentials = new Credentials();
 		// TODO Auto-generated constructor stub
-		this.loginCredentials.setId("ADMIN@123");
-		this.loginCredentials.setPassword("admin@123");
-		
-		
+		this.loginCredentials.setId("admin");
+		this.loginCredentials.setPassword("admin");
 	}
 	int adminLogin(){
 		logger.info("adminLogin Entry");
@@ -24,10 +22,15 @@ public class Admin extends Person
 		String u=SmartHealthCareSystem.sc.nextLine();
 		System.out.println("Enter Password: ");
 		String p=SmartHealthCareSystem.sc.nextLine();
-		if(u.equals("ADMIN@123") && p.equals("admin@123"))
+		if(u.equals("admin") && p.equals("admin"))
+		{
+			logger.info("adminLogin Exit with login successfull");
 			return 1;
-		else 
+		}
+		else {
+			logger.info("adminLogin Exit with login unsuccessfull");
 			return 0;
+		}
 	}
 	
 	void getDoctorDetails()
