@@ -108,10 +108,11 @@ public class Doctor extends Person {
             else
             {
             	System.out.println("Error in getting Data");
+            	//logger.
             }
 		}
             catch (Exception e) {
-            	
+            	//logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
 		return instance;
@@ -120,6 +121,7 @@ public class Doctor extends Person {
 	
 	public void viewProfile()
 	{
+		logger.info("viewProfile entry");
 		System.out.println("Doctor id \t\t\t-> " + getDocId());
 		System.out.println("Doctor name \t\t\t-> " + getName());
 		System.out.println("Date of Birth \t\t\t-> " + getDob());
@@ -130,10 +132,12 @@ public class Doctor extends Person {
 		System.out.println("Rank \t\t\t\t-> " + getRank());
 		System.out.println("Surgeon \t\t\t-> " + getSurgeon());
 		System.out.println("Opd Fees \t\t\t-> " + getOpdFees());
+		logger.info("viewProfile exit");
 	}
 	
 	public void loginSuccess()
 	{
+		logger.info("loginSuccess entry");
 		boolean flag = true;
 		while(flag)
 		{
@@ -174,18 +178,20 @@ public class Doctor extends Person {
 			else if(choice == 7) 
 			{
 				flag = false;
+				logger.info("Doctor " + name + " Log out");
 			}
 			else
 			{
 				System.out.println("Wrong choice");
 			}
 		}
-		
+		logger.info("loginSuccess exits");
 	}
 
 	
 	public boolean displayPatientsToAsist()
 	{
+		logger.info("diplayPatientsToAsist entry");
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
 			boolean status = statement.execute("select * from record where Did = "+ docId + " and Discharge_Date IS NULL " );
@@ -209,18 +215,20 @@ public class Doctor extends Person {
             else
             {
             	System.out.println("Error in getting Data");
+            	
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
+		logger.info("displayPatientsToAsist exit");
 		return true;
 	}
 
 	void referDoctor(int recId)
 	{
-		
+		logger.info("referDcotor Entry");
 		//System.out.println("Enter doctor id of doctor whom you want to refer ");
 		int referId = 	displayDoctorsToRefer();
 //SmartHealthCareSystem.nextint();
@@ -272,6 +280,7 @@ public class Doctor extends Person {
                 		            }
                 				}
                 		            catch (Exception e) {
+                		            	logger.error(e.getMessage().toString());
                 		            	System.out.println("Exception " + e.getMessage().toString());
                 		}
                 			}
@@ -301,6 +310,7 @@ public class Doctor extends Person {
             		            }
             				}
             		            catch (Exception e) {
+            		            	logger.error(e.getMessage().toString());
             		            	System.out.println("Exception " + e.getMessage().toString());
             		}
                 		}
@@ -318,12 +328,15 @@ public class Doctor extends Person {
 		}
 		
             catch (Exception e) {
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString() );
 }
+		logger.info("referDcotor Exit");
 	}
 	
 	private void assistPatient() {
 		//viewRecord();
+		logger.info("assistPatient Entry");
 		if(!displayPatientsToAsist())
 		{
             	System.out.println("No Patients to Assist");
@@ -362,7 +375,7 @@ public class Doctor extends Person {
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
 		if(recordFlag != 1)
@@ -395,6 +408,7 @@ public class Doctor extends Person {
 		}
         catch (Exception e) 
 		{    	
+        	logger.error(e.getMessage().toString());
         	System.out.println("Exception " + e.getMessage().toString());
         }
 		
@@ -427,6 +441,7 @@ public class Doctor extends Person {
 		}
         catch (Exception e) 
 		{    	
+        	logger.error(e.getMessage().toString());
         	System.out.println("Exception " + e.getMessage().toString());
         }
 		if(flag==1)
@@ -463,9 +478,11 @@ public class Doctor extends Person {
 		}
 		}//////////////////
 		}
+		logger.info("assistPatient Exit");
 		}
 	void writePrescription(int recId)
 	{
+		logger.info("writePrescription entry");
 		System.out.println("\nEnter new Priscription\n");
 		Prescription pres =  new Prescription();
 
@@ -504,7 +521,7 @@ public class Doctor extends Person {
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
 break;
@@ -518,11 +535,14 @@ break;
 		System.out.println("Invalid Choice");
 	}
 	}
+	logger.info("writePrescription exit");
 	}
 
 
 	private int displayDoctorsToRefer() {
-	boolean flag = true;
+		logger.info("displayDoctorsToRefer entry");
+		
+		boolean flag = true;
 		while(flag)
 		{
 		try {
@@ -575,17 +595,18 @@ break;
 		
 	}
         catch (Exception e) {
-        	
+        	logger.error(e.getMessage().toString());
         	System.out.println("Exception " + e.getMessage().toString());
 }
 	}
+		logger.info("displayDoctorsToRefer exit");
 		return -1;
 	}
 
 
 	private void viewPatient(int patientId) {
 		
-		
+		logger.info("viewPatient entry");
 		
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
@@ -612,14 +633,15 @@ break;
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
+		logger.info("viewPatient exit");
 	}
 
 
 	private void viewRecord() {
-		
+		logger.info("viewRecord entry");
 		try {
 			Statement statement = SmartHealthCareSystem.con.createStatement();
 			//boolean status = statement.execute("select * from record where Did = "+ docId );
@@ -687,14 +709,15 @@ break;
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
-		
+		logger.info("viewRecord exit");
 	}
 
 
 	private void addSchedule() {
+		logger.info("addSchedule entry");
 		Date appointDate;
 		while(true)
 		{
@@ -707,6 +730,7 @@ break;
 			catch (ParseException e) {
 				System.out.println("Invalid Date Format");
 				}
+			
 		}
 		
 		
@@ -746,17 +770,18 @@ break;
             }
 		}
             catch (Exception e) {
-            	
+            	logger.error(e.getMessage().toString());
             	System.out.println("Exception " + e.getMessage().toString());
 }
 		
-		
+		logger.info("addSchedule exit");
 		
 	}
 
 
 	@SuppressWarnings("deprecation")
 	private Time getTime() {
+		logger.info("getTime entry");
 		Time sampleTime;
 		while(true)
 		{
@@ -777,12 +802,13 @@ break;
 			sampleTime = new Time(hour, minute, 0);
 			break;	
 		}
+		logger.info("getTime exit");
 		return sampleTime;
 	}
 
 
 	private void getDoctorSchedule() {
-
+			logger.info("getDoctorSchedule entry");
 			try {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
 				boolean status = statement.execute("select * from schedule where Did = "+ docId );
@@ -808,14 +834,15 @@ break;
 	            }
 			}
 	            catch (Exception e) {
-	            	
+	            	logger.error(e.getMessage().toString());
 	            	System.out.println("Exception " + e.getMessage().toString());
 	}
-		
+			logger.info("getDoctorSchedule exit");
 	}
 
 
 	public void updateProfile() {
+		logger.info("updateProfile entry");
 		boolean flag2 = true;
 		while(flag2)
 		{
@@ -878,10 +905,12 @@ break;
 				
 			}
 		}
+		logger.info("updateProfile exit");
 	}
 
 
 	private void updateDoctorChanges() {
+		logger.info("updateDoctorChanges entry");
 	
 			try {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
@@ -921,18 +950,20 @@ break;
 	            }
 			}
 	            catch (Exception e) {
-	            	
+	            	logger.error(e.getMessage().toString());
 	            	System.out.println("Exception " + e.getMessage().toString());
 	}
-		
+			logger.info("updateDoctorChanges exit");
 	}
 
 
 	private void changeOpdFees() {
+		logger.info("changeOpdFees entry");
 		System.out.println("current OPD is -> " + getOpdFees());
 		System.out.println("Enter new Opd fees ");
 		int newFees = SmartHealthCareSystem.nextint();
 		setOpdFees(newFees);
+		logger.info("changeOpdFees exit");
 	}
 
 
@@ -961,10 +992,12 @@ break;
 
 
 	private void changePassword() {
+		logger.info("changePassword entry");
 		System.out.println("current password is -> " + getPassword());
 		System.out.println("Enter new password ");
 		String newPassword = SmartHealthCareSystem.sc.nextLine();
 		setPassword(newPassword);
+		logger.info("changePassword exit");
 	}
 
 
@@ -979,7 +1012,7 @@ break;
 		setRank(rank);
 		setSurgeon(Surgeon);
 		setOpdFees(opdFees);
-		
+		logger.info("Doctor " + name + " Signed in");
 	}
 	
 }
