@@ -25,10 +25,12 @@ public class Admin extends Person
 		if(u.equals("admin") && p.equals("admin"))
 		{
 			logger.info("adminLogin Exit with login successfull");
+			System.out.println("You have successfully logged-in");
 			return 1;
 		}
 		else {
 			logger.info("adminLogin Exit with login unsuccessfull");
+			System.out.println("Wrong username or password");
 			return 0;
 		}
 	}
@@ -102,7 +104,7 @@ public class Admin extends Person
 		}
 		}
 		catch(Exception e){
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("getDoctorDetails Exit");
 		
@@ -110,8 +112,9 @@ public class Admin extends Person
 	void getPatientDetails()
 	{
 		logger.info("getPatientDetails Entry");
-		int i=1;
+		int i=1,c=7;
 		try{
+			while(c!=3){
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
 			boolean status = stmt.execute("SELECT Name, Pid FROM patient");
 			if(status){
@@ -121,8 +124,6 @@ public class Admin extends Person
 				  int pid=rs.getInt("Pid");
 				  System.out.println(pid+". "+pName + "\n");
 				}
-				int c=7;
-				while(c!=3){
 					System.out.println("Enter your choice: ");
 					System.out.println("1.View patient personal details\n2.View patient history\n3.Exit\n");
 					c=SmartHealthCareSystem.nextint();
@@ -141,16 +142,17 @@ public class Admin extends Person
 						System.out.println("Wrong choice. Please enter a valid no.");
 						logger.warning("Invalid choice");
 					}
-				}
 			}
 			else
 			{
 				System.out.println("Error in getting Data");
 				logger.warning("Could not get data from DB");
+				break;
+			}
 			}
 		}
 		catch(Exception e){
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("getPatientDetails Exit");
 	}
@@ -224,7 +226,7 @@ public class Admin extends Person
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
         String rank;
         while(true){
@@ -304,11 +306,41 @@ public class Admin extends Person
 		}
         catch (Exception e) {
             	
-           	System.out.println("Exception " + e.getMessage().toString());
+        	logger.warning("Exception " + e.getMessage().toString());
         }
         logger.info("registerDoctor Exit");
 		
 
+	}
+	void showReassignMenu(){
+		try{
+			Statement stmt = SmartHealthCareSystem.con.createStatement();
+			boolean status = stmt.execute("SELECT * FROM record WHERE Discharge_Date IS NULL");
+			if(status){
+				ResultSet rs = stmt.getResultSet();
+				System.out.println("Record ID\tPatient ID\tAdmit Date\tPatient Description\tDisease Identified\tLocation\tDoctor ID");
+				while(rs.next()) {
+				  int rid= rs.getInt("RecId");
+				  int pid= rs.getInt("Pid");
+				  Date adate= rs.getDate("Admit_Date");
+				  String desc= rs.getString("Patient_Desc");
+				  String diden=rs.getString("Disease_Identified");
+				  String loc= rs.getString("Location");
+				  int did= rs.getInt("Did");
+				  System.out.println(rid+"\t\t\t"+pid+"\t"+adate+"\t"+desc+"\t\t\t"+diden+"\t\t"+loc+"\t\t"+did);
+				}
+			}
+            else
+            {
+            	System.out.println("No record found to be eligible for reassigning doctor");
+            	logger.warning("No record with NULL discharge date in DB");
+             }
+		
+		}
+		catch(Exception e)
+		{
+			logger.warning("Exception " + e.getMessage().toString());
+		}
 	}
 	void reassignDoctor()
 	{
@@ -318,7 +350,7 @@ public class Admin extends Person
 			boolean status = stmt.execute("SELECT * FROM record WHERE Discharge_Date IS NULL");
 			if(status){
 				ResultSet rs = stmt.getResultSet();
-				System.out.println("Record ID\tPatient ID\tAdmit Date\tPatient Description\tDisease Identified\tLocation");
+				System.out.println("Record ID\tPatient ID\tAdmit Date\tPatient Description\tDisease Identified\tLocation\tDoctor ID");
 				while(rs.next()) {
 				  int rid= rs.getInt("RecId");
 				  int pid= rs.getInt("Pid");
@@ -327,23 +359,28 @@ public class Admin extends Person
 				  String diden=rs.getString("Disease_Identified");
 				  String loc= rs.getString("Location");
 				  int did= rs.getInt("Did");
-				  System.out.println(rid+"\t\t\t"+pid+"\t"+adate+"\t\t"+desc+"\t"+diden+"\t"+loc+"\t"+did);
+				  System.out.println(rid+"\t\t\t"+pid+"\t"+adate+"\t"+desc+"\t\t\t"+diden+"\t\t"+loc+"\t\t"+did);
 				}
 			}
             else
             {
             	System.out.println("No record found to be eligible for reassigning doctor");
             	logger.warning("No record with NULL discharge date in DB");
-            }
+             }
 		
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
-		int c=0,rno;
+		int c=0,n=0,rno;
 		while(true)
 		{
+			if(n>0)
+			{
+			 showReassignMenu();
+			}
+			n++;
 			System.out.println("Enter Record no where you want to reassign doctor: ");
 			rno=SmartHealthCareSystem.nextint();
 			try{
@@ -364,12 +401,17 @@ public class Admin extends Person
 			}
 			catch(Exception e)
 			{
-				System.out.println(e);
+				logger.warning("Exception " + e.getMessage().toString());
 			}
 		}
 		int did,o=0;
 		while(true)
 		{
+			if(n>0)
+			{
+			 showReassignMenu();
+			 n++;
+			}
 			System.out.println("Enter ID of doctor to assign to record no:"+rno);
 			did=SmartHealthCareSystem.nextint();
 			try{
@@ -390,7 +432,7 @@ public class Admin extends Person
 			}
 			catch(Exception e)
 			{
-				System.out.println(e);
+				logger.warning("Exception " + e.getMessage().toString());
 			}
 		}
 		try{
@@ -408,8 +450,9 @@ public class Admin extends Person
 		    }
 		}
 		catch(Exception e){
-			System.out.println(e);
+			logger.warning("Exception " + e.getMessage().toString());
 		}
+	
 		logger.info("reassignDoctor Exit");
 	}
 	void changeCredentials()
@@ -443,7 +486,7 @@ public class Admin extends Person
 		int c=10;
 		System.out.println("Select an option: ");
 		while(c!=0){
-			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Register new department\n0. Log-out");
+			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Register new department\n8. Update Doctor Rank\n0. Log-out");
 			c=sc.nextInt();
 			if(c==1)
 				getDoctorDetails();
@@ -459,6 +502,8 @@ public class Admin extends Person
 				removeDoctor();
 			else if(c==7)
 				registerDept();
+			else if(c==8)
+				updateDoctorRank();
 			else if(c==0)
 			{
 				System.out.println("You have successfully logged out!");
@@ -493,11 +538,15 @@ public class Admin extends Person
             }
 			System.out.println("Select ID of HOD from list: ");
 			int id=SmartHealthCareSystem.nextint();
-			String query = "INSERT INTO department(DeptName, Did) VALUES "+ "(?,?)";
+			String tags;
+			System.out.println("Please enter tags(must be comma seperated): ");
+			tags=SmartHealthCareSystem.sc.nextLine();
+			String query = "INSERT INTO department(DeptName, Did, Tags) VALUES "+ "(?,?,?)";
 			PreparedStatement pstmt = null;
             pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(2,id);
             pstmt.setString(1,dname);
+            pstmt.setString(3,tags);
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
             if(rs != null && rs.next()){
@@ -511,7 +560,7 @@ public class Admin extends Person
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("registerDept Exit");
 		
@@ -550,7 +599,7 @@ public class Admin extends Person
 			
 		}
 		catch(Exception e){
-			System.out.println(e);
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("removeDoctor Exit");
 	}
@@ -592,7 +641,7 @@ public class Admin extends Person
 			}
 		}
 		catch(Exception e){
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("showPatientDetails Exit");
 	}
@@ -635,8 +684,96 @@ public class Admin extends Person
 			}
 		}
 		catch(Exception e){
-			System.out.println("Exception " + e.getMessage().toString());
+			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("showPatientHistory Exit");
+	}
+	void updateDoctorRank()
+	{
+		String rank="A";
+		int did;
+		logger.info("updateDoctorRank Entry");
+		try{
+			Statement stmt = SmartHealthCareSystem.con.createStatement();
+			boolean status = stmt.execute("SELECT Did,Name,Rank FROM doctor WHERE NOT (rank='senior specialist')");
+			if(status){
+				ResultSet rs = stmt.getResultSet();
+				System.out.println("DoctorID\t Name \tRank");
+				while(rs.next()) {
+				  did= rs.getInt("Did");
+				  String name= rs.getString("Name");
+				  rank=rs.getString("Rank");
+				  System.out.println(did+"\t\t"+name+"\t\t"+rank);
+				}
+			}
+            else
+            {
+            	System.out.println("Unable to fetch details");
+            	logger.warning("Unable to SELECT data from doctor");
+            }
+		
+		}
+		catch(Exception e)
+		{
+			logger.warning("Exception " + e.getMessage().toString());
+		}
+		int c=0,id;
+		while(true)
+		{
+			System.out.println("Enter Doctor ID where you want to update rank: ");
+			id=SmartHealthCareSystem.nextint();
+			try{
+					Statement s= SmartHealthCareSystem.con.createStatement();
+					boolean stat = s.execute("SELECT * FROM doctor WHERE Did="+id+" AND NOT (rank='senior specialist')");
+					if(stat){
+						ResultSet rs = s.getResultSet();
+						while(rs.next()) {
+							++c;
+						}
+						if(c==1)
+							break;
+						else{
+							System.out.println("You entered wrong Doctor ID, please try again");
+							logger.warning("Invalid doctor id entered");
+						}
+					}
+			}
+			catch(Exception e)
+			{
+				logger.warning("Exception " + e.getMessage().toString());
+			}
+		}
+		String r="A";
+		if(rank.equalsIgnoreCase("resident")){
+			System.out.println("Current Rank is Resident, it will be updated to Senior Resident");
+			r="senior resident";
+		}
+		else if(rank.equalsIgnoreCase("senior resident")){
+			System.out.println("Current Rank is Senior Resident, it will be updated to Specialist");
+			r="specialist";
+		} 
+		else if(rank.equalsIgnoreCase("Specialist")){
+			System.out.println("Current Rank is Specialist, it will be updated to Senior Specialist");
+			r="senior specialist";
+		}
+		try{
+			Statement stmt = SmartHealthCareSystem.con.createStatement();
+			String query = "update doctor set"
+					+" Rank='" +r + "'"
+					+" where Did="+ id;
+		    int count = stmt.executeUpdate(query);		
+			if(count == 1){
+	            System.out.println("Record Updated");
+	        }
+			else
+			{
+				System.out.println("Record not updated try again");
+		    }
+		}
+		catch(Exception e){
+			logger.warning("Exception " + e.getMessage().toString());
+		}
+		logger.info("reassignDoctor Exit");
+		
 	}
 }
