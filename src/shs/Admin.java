@@ -486,7 +486,7 @@ public class Admin extends Person
 		int c=10;
 		System.out.println("Select an option: ");
 		while(c!=0){
-			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Update Doctor Rank\n0. Log-out");
+			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Register new Department\n8. Update Doctor Rank\n0. Log-out");
 			c=sc.nextInt();
 			if(c==1)
 				getDoctorDetails();
@@ -500,9 +500,9 @@ public class Admin extends Person
 				changeCredentials();
 			else if(c==6)
 				removeDoctor();
-	//		else if(c==6)
-		//		registerDept();
 			else if(c==7)
+				registerDept();
+			else if(c==8)
 				updateDoctorRank();
 			else if(c==0)
 			{
@@ -520,47 +520,90 @@ public class Admin extends Person
 		logger.info("registerDept Entry");
 		System.out.println("To register a new department, enter the following details: ");
 		System.out.println("Department Name: ");
+		Doctor doctorInstance = null;
 		String dname=SmartHealthCareSystem.sc.nextLine();
+		boolean flag = true;
+		while(flag)
+		{
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
 			boolean status = stmt.execute("SELECT Did,Name FROM doctor WHERE Rank='senior specialist' AND Did NOT IN(Select Did from department)");
 			if(status){
 				ResultSet rs = stmt.getResultSet();
+				if(!rs.next())
+				{
+					System.out.println("No Doctor Available for Department HOD position");
+					break;
+				}
+				rs.beforeFirst();
 				while(rs.next()) {
 				  String dName = rs.getString("Name");
 				  int did=rs.getInt("Did");
 				  System.out.println(did+". "+dName + "\n");
 				}
+				System.out.println("Select ID of HOD from list: ");
+				int id=SmartHealthCareSystem.nextint();
+				doctorInstance = getDoctorById(id);
+				if(doctorInstance == null)
+				{
+					System.out.println("Invalid Doctor Id");
+					continue;
+				}
+				else
+				{
+					rs.beforeFirst();
+					boolean flag2 = true;
+					while(rs.next()) {
+					 // String dName = rs.getString("Name");
+					  if(doctorInstance.getDocId() == rs.getInt("Did"))
+					  {
+						  flag2 = false;
+						  break;
+					  }
+					 // System.out.println(did+". "+dName + "\n");
+					}
+					if(flag2 == false)
+					{
+						flag = false;
+					}
+					else
+					{
+						System.out.println("Invalid Doctor Id");
+						continue;
+					}
+				}
+				String tags;
+				System.out.print("Please enter tags for Smart Implementation(must be comma seperated): ");
+				tags=SmartHealthCareSystem.sc.nextLine();
+				String query = "INSERT INTO department(DeptName, Did, Tags) VALUES "+ "(?,?,?)";
+				PreparedStatement pstmt = null;
+	            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+	            pstmt.setInt(2,id);
+	            pstmt.setString(1,dname);
+	            pstmt.setString(3,tags);
+	            pstmt.executeUpdate();
+	            ResultSet rs2 = pstmt.getGeneratedKeys();
+	            if(rs2 != null && rs2.next()){
+	            		doctorInstance.setDeptId(rs.getInt(1));
+	            		doctorInstance.updateDoctorChanges();
+		                System.out.println("New Department added with id: " + rs2.getInt(1));
+		            }
+	            else
+	            {
+	            	System.out.println("Unable to register new department");
+	            }
 			}
             else
             {
             	System.out.println("Unable to fetch data from table department");
             }
-			System.out.println("Select ID of HOD from list: ");
-			int id=SmartHealthCareSystem.nextint();
-			String tags;
-			System.out.println("Please enter tags(must be comma seperated): ");
-			tags=SmartHealthCareSystem.sc.nextLine();
-			String query = "INSERT INTO department(DeptName, Did, Tags) VALUES "+ "(?,?,?)";
-			PreparedStatement pstmt = null;
-            pstmt = SmartHealthCareSystem.con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-            pstmt.setInt(2,id);
-            pstmt.setString(1,dname);
-            pstmt.setString(3,tags);
-            pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if(rs != null && rs.next()){
-	                System.out.println("New Department added.");
-	            }
-            else
-            {
-            	System.out.println("Unable to register new department");
-            }
+
 		
 		}
 		catch(Exception e)
 		{
 			logger.warning("Exception " + e.getMessage().toString());
+		}
 		}
 		logger.info("registerDept Exit");
 		
@@ -644,6 +687,45 @@ public class Admin extends Person
 			logger.warning("Exception " + e.getMessage().toString());
 		}
 		logger.info("showPatientDetails Exit");
+	}
+	public Doctor getDoctorById(int docId)
+	{
+		//Date date;
+		Doctor instance = null;
+     //   System.out.println("Hello ");
+		try {
+			Statement statement = SmartHealthCareSystem.con.createStatement();
+			boolean status = statement.execute("select * from doctor where Did = "+ docId);
+           // System.out.println("Hello " + status);
+			if(status){
+                //query is a select query.
+                ResultSet rs = statement.getResultSet();
+                if(rs.next() == false)
+                {
+                	rs.close();
+                	return null;
+                }
+                else
+                {
+                rs.beforeFirst();
+                while(rs.next())
+                {
+                    instance = new Doctor(rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"),rs.getString("hospital"));
+                    instance.setDocId(rs.getInt("Did"));
+                }
+                }
+            }
+            else
+            {
+            	System.out.println("Error in getting Data");
+            	//logger.
+            }
+		}
+            catch (Exception e) {
+            	//logger.error(e.getMessage().toString());
+            	System.out.println("Exception " + e.getMessage().toString());
+}
+		return instance;
 	}
 	void showPatientHistory(){
 		logger.info("showPatientHistory Entry");

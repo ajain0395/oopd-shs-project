@@ -927,7 +927,7 @@ break;
 	}
 
 
-	private void updateDoctorChanges() {
+	public void updateDoctorChanges() {
 		logger.info("updateDoctorChanges entry");
 	
 			try {
