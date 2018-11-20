@@ -147,10 +147,12 @@ public class SmartHealthCareSystem {
 
 		boolean flag = true;
 		while (flag) {
+			System.out.println("\nHome Page\n");
 			System.out.println("1. Admin Login");
 			System.out.println("2. Patient Options");
 			System.out.println("3. Doctor Login");
 			System.out.println("4. Exit");
+			System.out.print("Enter Choice: ");
 			int choice = nextint();
 			if(choice == 1)
 			{
