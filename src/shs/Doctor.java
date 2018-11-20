@@ -674,7 +674,7 @@ break;
 				}
 				else if(ch==2)
 				{	
-					status = statement.execute("SELECT * FROM patient,record WHERE patient.Pid=record.Pid and record.Did=" + docId + " and record.Discharge_Date is NULL order BY patient.Name ");
+					status = statement.execute("SELECT * FROM patient,record WHERE patient.Pid=record.Pid and record.Did=" + docId + " and record.Discharge_Date is NULL order BY patient.Pid ");
 					break;
 				}
 				else
