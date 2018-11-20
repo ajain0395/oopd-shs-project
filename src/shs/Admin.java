@@ -297,7 +297,7 @@ public class Admin extends Person
             pstmt.executeUpdate();
 	           ResultSet rs = pstmt.getGeneratedKeys();
 	            if(rs != null && rs.next()){
-	                System.out.println("New Doctor registered.");
+	                System.out.println("New Doctor registered with id: " + rs.getInt(1));
 	            }
             else
             {

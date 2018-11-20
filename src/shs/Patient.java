@@ -327,6 +327,8 @@ public class Patient extends Person {
 								selectedDoctorId = docid;
 								System.out.println("Selected Doctor\t\t: "+ rs.getString("name"));
 								System.out.print("Selected Doctor Rank\t:"+rs.getString("rank"));
+								System.out.print("Selected Doctor Contact\t:"+rs.getString("contactno"));
+								System.out.print("Selected Doctor Address\t:"+rs.getString("address"));
 								System.out.print("Is Surgeon\t\t:"+ rs.getString("surgeon"));
 								System.out.println("Selected Doctor Hospital\t: "+rs.getString("hospital"));
 								selectDoctorSchedule(docid);
@@ -373,7 +375,7 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
+						System.out.println("S No.\t|\tName\t|\tRank\t\t\t|\tContact No.\t|\tAddress\t|\tSurgeon\t|\tHospital Name\n");
 						rs.beforeFirst();
 					}
 					while (rs.next()) {
@@ -381,6 +383,8 @@ public class Patient extends Person {
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
 						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("contactno")+"\t|\t");
+						System.out.print(rs.getString("address")+"\t|\t");
 						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
@@ -455,14 +459,15 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
-						rs.beforeFirst();
+						System.out.println("S No.\t|\tName\t|\tRank\t\t\t|\tContact No.\t|\tAddress\t|\tSurgeon\t|\tHospital Name\n");						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
 						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("contactno")+"\t|\t");
+						System.out.print(rs.getString("address")+"\t|\t");
 						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
@@ -789,14 +794,15 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
-						rs.beforeFirst();
+						System.out.println("S No.\t|\tName\t|\tRank\t\t\t|\tContact No.\t|\tAddress\t|\tSurgeon\t|\tHospital Name\n");						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
 						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("contactno")+"\t|\t");
+						System.out.print(rs.getString("address")+"\t|\t");
 						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
