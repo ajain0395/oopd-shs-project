@@ -326,6 +326,8 @@ public class Patient extends Person {
 								rs.next();
 								selectedDoctorId = docid;
 								System.out.println("Selected Doctor\t\t: "+ rs.getString("name"));
+								System.out.print("Selected Doctor Rank\t:"+rs.getString("rank"));
+								System.out.print("Is Surgeon\t\t:"+ rs.getString("surgeon"));
 								System.out.println("Selected Doctor Hospital\t: "+rs.getString("hospital"));
 								selectDoctorSchedule(docid);
 								flag = false;
@@ -371,13 +373,15 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
+						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
 						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
 					if(count > 0)
@@ -451,13 +455,15 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
+						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
 						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
 					if(count > 0)
@@ -783,13 +789,15 @@ public class Patient extends Person {
 					if(rs.next())
 					{
 						System.out.println("Select Doctor");
-						System.out.println("S No.\t|\tName\t|\tHospital Name\n");
+						System.out.println("S No.\t|\tName\t|\tRank\t\t|\tSurgeon\t|\tHospital Name\n");
 						rs.beforeFirst();
 					}
 					while (rs.next()) {
 						count++;
 						System.out.print(count+"\t|\t");
 						System.out.print(rs.getString("name")+"\t|\t");
+						System.out.print(rs.getString("rank")+"\t|\t");
+						System.out.print(rs.getString("surgeon")+"\t|\t");
 						System.out.println(rs.getString("hospital"));
 					}
 					if(count > 0)
