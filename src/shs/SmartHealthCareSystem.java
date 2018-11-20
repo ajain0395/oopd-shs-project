@@ -22,7 +22,7 @@ public class SmartHealthCareSystem {
 		return date;
 	}
 	
-	static java.util.Date stringToJavaDate(String dateString)
+	public static java.util.Date stringToJavaDate(String dateString)
 	{
 		java.util.Date date = null;
 		try {
@@ -41,7 +41,7 @@ public class SmartHealthCareSystem {
 		
 		return s;
 	}
-	static String javaDateToString(java.util.Date date)
+	public static String javaDateToString(java.util.Date date)
 	{
 		String s = null;
 		s = simpleDateFormat.format(date);

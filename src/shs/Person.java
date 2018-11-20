@@ -32,7 +32,7 @@ public class Person {
 	protected void changeContactNumber() {
 		logger.info("Change Contact Number Entry");
 		System.out.println("current contact number is -> " + getPhoneNumber());
-		System.out.println("Enter new contact number ");
+		System.out.print("Enter new contact number: ");
 		String newPhoneNumber = SmartHealthCareSystem.nextintString();
 		setPhoneNumber(newPhoneNumber);
 		logger.info("Change Contact Number Exit");
@@ -42,7 +42,7 @@ public class Person {
 	protected void changeAddress() {
 		logger.info("Change Addess Entry");
 		System.out.println("current Address is -> " + getAddress());
-		System.out.println("Enter new Address ");
+		System.out.print("Enter new Address: ");
 		String newAddress = SmartHealthCareSystem.sc.nextLine();
 		setAddress(newAddress);
 		logger.info("Change Addess Exit");
@@ -61,12 +61,12 @@ public class Person {
 		ch = SmartHealthCareSystem.nextint();
 		if(ch == 1)
 		{
-			newGender = "Male";
+			newGender = "M";
 			break;
 		}
 		else if(ch == 2)
 		{
-			newGender = "Female";
+			newGender = "F";
 			break;
 		}
 		else

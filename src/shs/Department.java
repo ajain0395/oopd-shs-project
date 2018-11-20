@@ -1,7 +1,6 @@
 package shs;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -10,7 +9,6 @@ public class Department {
 	private int deptId;
 	private String deptartmentName;
 	private int dId;
-	Connection con;
 	
 	public Department()
 	{
@@ -19,12 +17,9 @@ public class Department {
 	
 	public Department(int deptId) {
 		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SHSDB", "root", "abcd1234");
-			
+
 			try {
-				Statement statement = con.createStatement();
+				Statement statement = SmartHealthCareSystem.con.createStatement();
 
 				boolean status = statement.execute(
 						"SELECT * FROM `department` where DeptId =" + deptId);
@@ -36,6 +31,8 @@ public class Department {
 					while (rs.next()) {
 						count++;
 					}
+					rs.beforeFirst();
+					rs.next();
 					if(count > 0)
 					{
 						setdId(rs.getInt("did"));
@@ -47,12 +44,9 @@ public class Department {
 				
 				
 			} catch (Exception e) {
-				System.out.println(e.getMessage().toString());
+				System.out.println("Exception:"+e.getMessage().toString());
 			}
-		
-		} catch (Exception e) {
-			
-		}
+
 
 	}
 	

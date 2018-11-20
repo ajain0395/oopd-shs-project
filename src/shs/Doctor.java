@@ -18,6 +18,19 @@ public class Doctor extends Person {
 	private String rank;
 	private String surgeon;
 	private int opdFees;
+	private String hospital;
+
+
+	
+	
+	public String getHospital() {
+		return hospital;
+	}
+
+
+	public void setHospital(String hospital) {
+		this.hospital = hospital;
+	}
 
 
 	public int getDocId() {
@@ -101,7 +114,8 @@ public class Doctor extends Person {
                 rs.beforeFirst();
                 while(rs.next())
                 {
-                    instance = new Doctor(rs.getInt("Did"),rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"));
+                    instance = new Doctor(rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"),  rs.getString("password") , rs.getInt("DeptId") , rs.getString("Rank") , rs.getString("Surgeon") , rs.getInt("OpdFees"),rs.getString("hospital"));
+                    instance.setDocId(rs.getInt("Did"));
                 }
                 }
             }
@@ -854,9 +868,9 @@ break;
 			System.out.println("4. Address");
 			System.out.println("5. Contact Number");
 			System.out.println("6. Password");
-			
 			System.out.println("7. Opd Fees");
-			System.out.println("8. Done all Changes");
+			System.out.println("8. Hospital Name");
+			System.out.println("9. Done all Changes");
 			
 			int choice = SmartHealthCareSystem.nextint();
 			if(choice == 1)
@@ -896,6 +910,10 @@ break;
 			}
 			else if(choice == 8)
 			{
+				changeHospital();
+			}
+			else if(choice == 9)
+			{
 				updateDoctorChanges();
 				flag2 = false;
 			}
@@ -914,18 +932,7 @@ break;
 	
 			try {
 				Statement statement = SmartHealthCareSystem.con.createStatement();
-			//	boolean status = statement.execute("select * from record where pid = "+ pid);
-				
-				/*String query = "update table patient set"
-						+" name=" + getName()
-						+ ", dob=" + getDob()
-						+ ", gender=" +getGender()
-						+ ", address=" + getAddress()
-						+ ", contactno=" + getPhoneNumber()
-						+ ", password=" + getPassword()
-						//+"salary"=2000 
-						+" where pid="+ getD();*/
-	            //count will give you how many records got updated
+
 				String query = "update doctor set"
 				+" name='" + getName() + "'"
 				+ ", dob='" + SmartHealthCareSystem.javaDateToString(getDob()) + "'"
@@ -936,6 +943,7 @@ break;
 				+ " , DeptId='" + getDeptId() + "'"
 				+ " , Rank='" + getRank() + "'"
 				+ " , Surgeon='" + getSurgeon() + "'"
+				+ " , Hospital='" + getHospital()+"'"
 				+ " , OpdFees='" + getOpdFees() + "'"
 				+" where Did="+ getDocId();
 	    //count will give you how many records got updated
@@ -960,21 +968,24 @@ break;
 	private void changeOpdFees() {
 		logger.info("changeOpdFees entry");
 		System.out.println("current OPD is -> " + getOpdFees());
-		System.out.println("Enter new Opd fees ");
+		System.out.print("Enter new Opd fees: ");
 		int newFees = SmartHealthCareSystem.nextint();
 		setOpdFees(newFees);
 		logger.info("changeOpdFees exit");
 	}
 
 
-	/*private void changeSurgeon() {
-		System.out.println("current surgeon status is -> " + getSurgeon());
-		System.out.println("Enter new surgeon status ");
-		String newSurgeon = SmartHealthCareSystem.sc.nextLine();
-		setSurgeon(newSurgeon);
+	private void changeHospital() {
+		logger.info("changeHospital Entry");
+
+		System.out.println("current Hospital is -> " + getHospital());
+		System.out.print("Enter new Hospital Name: ");
+		setHospital(SmartHealthCareSystem.sc.nextLine());
+		logger.info("changeHospital Exit");
+
 	}
 
-
+/*
 	private void changeRank() {
 		System.out.println("current Rank is -> " + getRank());
 		System.out.println("Enter new rank ");
@@ -994,7 +1005,7 @@ break;
 	private void changePassword() {
 		logger.info("changePassword entry");
 		System.out.println("current password is -> " + getPassword());
-		System.out.println("Enter new password ");
+		System.out.print("Enter new password: ");
 		String newPassword = SmartHealthCareSystem.sc.nextLine();
 		setPassword(newPassword);
 		logger.info("changePassword exit");
@@ -1004,7 +1015,7 @@ break;
 	
 
 
-	public Doctor(int docId , String name , Date date , String gender , String address , String contactNumber , String password , int deptId , String rank , String Surgeon , int opdFees) {
+	public Doctor(String name , Date date , String gender , String address , String contactNumber , String password , int deptId , String rank , String Surgeon , int opdFees,String hospital) {
 		super(name , date , gender , address , contactNumber);
 		setDocId(docId);
 		setPassword(password);
@@ -1012,6 +1023,7 @@ break;
 		setRank(rank);
 		setSurgeon(Surgeon);
 		setOpdFees(opdFees);
+		setHospital(hospital);
 		logger.info("Doctor " + name + " Signed in");
 	}
 	

@@ -14,9 +14,9 @@ public class Patient extends Person {
 	int selectedDoctorId = 0;
 	String appointmentDate = null;
 	
-	public Patient(String name, Date dob,String gender, String address, String phonenumber,int pid,String password) {
+	public Patient(String name, Date dob,String gender, String address, String phonenumber/*,int pid*/,String password) {
 		super(name, dob, gender, address, phonenumber);
-		this.setPid(pid);
+	//	this.setPid(pid);
 		this.setPassword(password);
 		logger.info("User "+ name +" Signed in");
 	}
@@ -39,7 +39,8 @@ public class Patient extends Person {
                 rs.beforeFirst();
                 while(rs.next())
                 {
-                    instance = new Patient(rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"), rs.getInt("pid"), rs.getString("password"));
+                    instance = new Patient(rs.getString("name"), rs.getDate("dob"), rs.getString("gender"), rs.getString("address"), rs.getString("ContactNo"), rs.getString("password"));
+                    instance.setPid(rs.getInt("pid"));
                 }
                 }
             }
@@ -51,8 +52,8 @@ public class Patient extends Person {
 		}
             catch (Exception e) {
             	
-            	System.out.println("Exception " + e.getMessage().toString());
-            	
+/*            	System.out.println("Exception " + e.getMessage().toString());
+*/            	
 }
 		return instance;
 	}
@@ -840,11 +841,11 @@ public class Patient extends Person {
 		logger.info("selectDoctorByDepartment Exit");
 	}
 	
-	void registerPatient()
+	public int insertPatient()
 	{
 		logger.info("registerPatient Entry");
-		setProfile();
-		try {	try {
+		//setProfile();
+		try {	
 			String query = "INSERT INTO patient( Name, DOB, Gender, Address, ContactNo , Password ) VALUES "
 					+ "(?,?,?,?,?,?)";
 			PreparedStatement pstmt = null;
@@ -869,9 +870,19 @@ public class Patient extends Person {
             }
 		}
             catch (Exception e) {
-            	
-            	logger.error( e.getMessage().toString());
+            	System.out.println(e.getMessage().toString());
+            	logger.error(e.getMessage().toString());
 }		
+		
+		logger.info("registerPatient Exit");
+	return getPid();
+	}
+	
+	void registerPatient()
+	{
+		logger.info("registerPatient Entry");
+		setProfile();
+		try {	
 			String query = "INSERT INTO patient( Name, DOB, Gender, Address, ContactNo , Password ) VALUES "
 					+ "(?,?,?,?,?,?)";
 			PreparedStatement pstmt = null;
