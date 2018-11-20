@@ -486,7 +486,7 @@ public class Admin extends Person
 		int c=10;
 		System.out.println("Select an option: ");
 		while(c!=0){
-			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Register new department\n8. Update Doctor Rank\n0. Log-out");
+			System.out.println("1. View doctor details\n2. View patient details\n3. Register Doctor\n4. Reassign a doctor\n5. Change login credentials\n6. Remove Doctor\n7. Update Doctor Rank\n0. Log-out");
 			c=sc.nextInt();
 			if(c==1)
 				getDoctorDetails();
@@ -500,9 +500,9 @@ public class Admin extends Person
 				changeCredentials();
 			else if(c==6)
 				removeDoctor();
+	//		else if(c==6)
+		//		registerDept();
 			else if(c==7)
-				registerDept();
-			else if(c==8)
 				updateDoctorRank();
 			else if(c==0)
 			{
@@ -692,13 +692,23 @@ public class Admin extends Person
 	{
 		String rank="A";
 		int did;
+		boolean flag = false;
 		logger.info("updateDoctorRank Entry");
 		try{
 			Statement stmt = SmartHealthCareSystem.con.createStatement();
 			boolean status = stmt.execute("SELECT Did,Name,Rank FROM doctor WHERE NOT (rank='senior specialist')");
 			if(status){
 				ResultSet rs = stmt.getResultSet();
-				System.out.println("DoctorID\t Name \tRank");
+				if(rs.next())
+				{
+				System.out.println("DoctorID\tName\t\tRank");
+				flag = true;
+				rs.beforeFirst();
+				}
+				else
+				{
+					System.out.println("No Doctor with rank lower than Senior Specialist");
+				}
 				while(rs.next()) {
 				  did= rs.getInt("Did");
 				  String name= rs.getString("Name");
@@ -717,8 +727,8 @@ public class Admin extends Person
 		{
 			logger.warning("Exception " + e.getMessage().toString());
 		}
-		int c=0,id;
-		while(true)
+		int c=0,id = 0;
+		while(true && flag)
 		{
 			System.out.println("Enter Doctor ID where you want to update rank: ");
 			id=SmartHealthCareSystem.nextint();
@@ -728,6 +738,7 @@ public class Admin extends Person
 					if(stat){
 						ResultSet rs = s.getResultSet();
 						while(rs.next()) {
+							rank = rs.getString("Rank");
 							++c;
 						}
 						if(c==1)
@@ -743,7 +754,7 @@ public class Admin extends Person
 				logger.warning("Exception " + e.getMessage().toString());
 			}
 		}
-		String r="A";
+		String r="";
 		if(rank.equalsIgnoreCase("resident")){
 			System.out.println("Current Rank is Resident, it will be updated to Senior Resident");
 			r="senior resident";
@@ -762,13 +773,9 @@ public class Admin extends Person
 					+" Rank='" +r + "'"
 					+" where Did="+ id;
 		    int count = stmt.executeUpdate(query);		
-			if(count == 1){
+			if(count == 1 ){
 	            System.out.println("Record Updated");
 	        }
-			else
-			{
-				System.out.println("Record not updated try again");
-		    }
 		}
 		catch(Exception e){
 			logger.warning("Exception " + e.getMessage().toString());
